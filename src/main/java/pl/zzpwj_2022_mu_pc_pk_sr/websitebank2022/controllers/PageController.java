@@ -49,6 +49,7 @@ public class PageController {
         for (BankAccount bankAccount: bankAccounts) {
             msg+="Stan konta : "+bankAccount.getMoney()+"\n Oprocentowanie : "+bankAccount.getBankAccountType().getInterest()+"\n Typ rachunku :"+bankAccount.getBankAccountType().getName();
         }
+
         return ResponseEntity.ok(new MessageResponse(userDetails.getUsername()+"\n Imie : "+userDetails.getName()+"\n Nazwisko : "+userDetails.getSurname()
         +"\n Numer karty : "+userDetails.getIdCardNumber()+"\n"+msg));
     }
