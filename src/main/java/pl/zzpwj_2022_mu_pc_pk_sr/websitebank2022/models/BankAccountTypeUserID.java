@@ -5,4 +5,6 @@ import java.io.Serializable;
 public class BankAccountTypeUserID implements Serializable {
     private Long user;
     private Long bankAccountType;
+
+
 }

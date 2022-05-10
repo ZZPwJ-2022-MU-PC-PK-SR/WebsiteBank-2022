@@ -173,4 +173,12 @@ public class User {
     public void setBoar(String boar) {
         this.boar = boar;
     }
+
+    public List<BankAccount> getUserAssoc() {
+        return userAssoc;
+    }
+
+    public void setUserAssoc(List<BankAccount> userAssoc) {
+        this.userAssoc = userAssoc;
+    }
 }

@@ -108,6 +108,7 @@ public class AuthControllerTest {
         role.setId(1);
         role.setName(EnumRole.ROLE_USER);
         BankAccountType bankAccountType = new BankAccountType(3,3,3,"cos");
+        bankAccountType.setId(1L);
         User user = new User(singupRequest.getUsername(),singupRequest.getEmail(),singupRequest.getPassword(),singupRequest.getName(),singupRequest.getSurname(),singupRequest.getPersonalId(),singupRequest.getIdCardNumber(),singupRequest.getAddressLiving(),singupRequest.getAddressCorrespondence());
         user.setId(1L);
         when(bankAccountTypeRepository.findById(any())).thenReturn(Optional.of(bankAccountType));
