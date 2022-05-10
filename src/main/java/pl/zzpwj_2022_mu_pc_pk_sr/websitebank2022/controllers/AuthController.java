@@ -13,13 +13,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.EnumRole;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.Role;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.User;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.*;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.LoginRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.SingupRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.JwtResponse;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.MessageResponse;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.BankAccountRepository;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.BankAccountTypeRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.RoleRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.UserRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.WebSecurityConfig;
@@ -29,6 +29,7 @@ import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.UserDetailsImpl;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,6 +38,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/auth")
 @Import(WebSecurityConfig.class)
 public class AuthController {
+    @Autowired
+    BankAccountTypeRepository bankAccountTypeRepository;
+    @Autowired
+    BankAccountRepository bankAccountRepository;
     @Autowired
     AuthenticationManager authenticationManager;
     @Autowired
@@ -71,7 +76,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        User user = new User(singupRequest.getUsername(), singupRequest.getEmail(), encoder.encode(singupRequest.getPassword()));
+        User user = new User(singupRequest.getUsername(), singupRequest.getEmail(), encoder.encode(singupRequest.getPassword()), singupRequest.getName(),singupRequest.getSurname(),singupRequest.getPersonalId(),singupRequest.getIdCardNumber(),singupRequest.getAddressLiving(),singupRequest.getAddressCorrespondence());
         Set<String> strRoles = singupRequest.getRole();
         Set<Role> roles = new HashSet<>();
         if(strRoles == null) {
@@ -91,8 +96,12 @@ public class AuthController {
                 }
             });
         }
+        BankAccountType bankAccountType = bankAccountTypeRepository.findById(1L).get();
         user.setRoles(roles);
         userRepository.save(user);
+        user = userRepository.findByEmail(user.getEmail()).get();
+        BankAccount bankAccount = new BankAccount(bankAccountType,user,1000);
+        bankAccountRepository.save(bankAccount);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 

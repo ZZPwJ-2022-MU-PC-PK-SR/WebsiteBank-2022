@@ -16,6 +16,12 @@ public class UserDetailsImpl implements UserDetails {
     private Long id;
     private String username;
     private String email;
+    private String name;
+    private String surname;
+    private String personalId;
+    private String idCardNumber;
+    private String addressLiving;
+    private String addressCorrespondence;
     @JsonIgnore
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
@@ -28,6 +34,20 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
+    public UserDetailsImpl(Long id, String username, String email, String name, String surname, String personalId, String idCardNumber, String addressLiving, String addressCorrespondence, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.name = name;
+        this.surname = surname;
+        this.personalId = personalId;
+        this.idCardNumber = idCardNumber;
+        this.addressLiving = addressLiving;
+        this.addressCorrespondence = addressCorrespondence;
+        this.password = password;
+        this.authorities = authorities;
+    }
+
     public static UserDetailsImpl build(User user){
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
@@ -36,6 +56,12 @@ public class UserDetailsImpl implements UserDetails {
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
+                user.getName(),
+                user.getSurname(),
+                user.getPersonalId(),
+                user.getIdCardNumber(),
+                user.getAddressLiving(),
+                user.getAddressCorrespondence(),
                 user.getPassword(),
                 authorities
         );
@@ -65,6 +91,30 @@ public class UserDetailsImpl implements UserDetails {
         return username;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public String getPersonalId() {
+        return personalId;
+    }
+
+    public String getIdCardNumber() {
+        return idCardNumber;
+    }
+
+    public String getAddressLiving() {
+        return addressLiving;
+    }
+
+    public String getAddressCorrespondence() {
+        return addressCorrespondence;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -79,6 +129,8 @@ public class UserDetailsImpl implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
+
 
     @Override
     public boolean isEnabled() {
