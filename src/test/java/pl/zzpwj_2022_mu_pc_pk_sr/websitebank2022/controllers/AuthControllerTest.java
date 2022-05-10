@@ -111,6 +111,8 @@ public class AuthControllerTest {
         bankAccountType.setId(1L);
         User user = new User(singupRequest.getUsername(),singupRequest.getEmail(),singupRequest.getPassword(),singupRequest.getName(),singupRequest.getSurname(),singupRequest.getPersonalId(),singupRequest.getIdCardNumber(),singupRequest.getAddressLiving(),singupRequest.getAddressCorrespondence());
         user.setId(1L);
+        user.setBoar("xd");
+        BankAccount bankAccount = new BankAccount(bankAccountType,user,5000,"12345555555555555555555555");
         when(bankAccountTypeRepository.findById(any())).thenReturn(Optional.of(bankAccountType));
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(userRepository.existsByUsername(anyString())).thenReturn(false);
