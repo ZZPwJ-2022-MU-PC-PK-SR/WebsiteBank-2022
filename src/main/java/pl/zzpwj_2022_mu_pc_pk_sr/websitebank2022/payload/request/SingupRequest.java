@@ -17,8 +17,32 @@ public class SingupRequest {
     private Set<String> role;
 
     @NotBlank
-    @Size(min = 8, max = 40)
+    @Size(min = 2, max = 40)
     private String password;
+
+    @NotBlank
+    @Size(min = 2, max = 40)
+    private String name;
+
+    @NotBlank
+    @Size(min = 2, max = 40)
+    private String surname;
+
+    @NotBlank
+    @Size(min = 2, max = 40)
+    private String personalId;
+
+    @NotBlank
+    @Size(min = 2, max = 40)
+    private String idCardNumber;
+
+    @NotBlank
+    @Size(min = 2, max = 40)
+    private String addressLiving;
+
+    @NotBlank
+    @Size(min = 2, max = 40)
+    private String addressCorrespondence;
 
     public String getUsername() {
         return username;
@@ -50,5 +74,53 @@ public class SingupRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getPersonalId() {
+        return personalId;
+    }
+
+    public void setPersonalId(String personalId) {
+        this.personalId = personalId;
+    }
+
+    public String getIdCardNumber() {
+        return idCardNumber;
+    }
+
+    public void setIdCardNumber(String idCardNumber) {
+        this.idCardNumber = idCardNumber;
+    }
+
+    public String getAddressLiving() {
+        return addressLiving;
+    }
+
+    public void setAddressLiving(String addressLiving) {
+        this.addressLiving = addressLiving;
+    }
+
+    public String getAddressCorrespondence() {
+        return addressCorrespondence;
+    }
+
+    public void setAddressCorrespondence(String addressCorrespondence) {
+        this.addressCorrespondence = addressCorrespondence;
     }
 }

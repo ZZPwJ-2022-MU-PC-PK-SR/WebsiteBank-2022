@@ -14,11 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.EnumRole;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.Role;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.User;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.*;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.LoginRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.SingupRequest;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.BankAccountRepository;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.BankAccountTypeRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.RoleRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.UserRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.WebSecurityConfig;
@@ -46,6 +46,10 @@ public class AuthControllerTest {
     private RoleRepository roleRepository;
     @Mock
     private PasswordEncoder passwordEncoder;
+    @Mock
+    private BankAccountTypeRepository bankAccountTypeRepository;
+    @Mock
+    private BankAccountRepository bankAccountRepository;
     @Mock
     private AuthenticationManager authenticationManager;
     @Mock
@@ -94,10 +98,22 @@ public class AuthControllerTest {
         singupRequest.setUsername("jonras1234567");
         singupRequest.setRole(new HashSet<>(Arrays.asList("user")));
         singupRequest.setPassword("password");
+        singupRequest.setName("jonras1234567");
+        singupRequest.setSurname("jonras1234567");
+        singupRequest.setPersonalId("jonras1234567");
+        singupRequest.setIdCardNumber("jonras1234567");
+        singupRequest.setAddressLiving("jonras1234567");
+        singupRequest.setAddressCorrespondence("jonras1234567");
         Role role = new Role();
         role.setId(1);
         role.setName(EnumRole.ROLE_USER);
-
+        BankAccountType bankAccountType = new BankAccountType(3,3,3,"cos");
+        bankAccountType.setId(1L);
+        User user = new User(singupRequest.getUsername(),singupRequest.getEmail(),singupRequest.getPassword(),singupRequest.getName(),singupRequest.getSurname(),singupRequest.getPersonalId(),singupRequest.getIdCardNumber(),singupRequest.getAddressLiving(),singupRequest.getAddressCorrespondence());
+        user.setId(1L);
+        user.setBoar("xd");
+        BankAccount bankAccount = new BankAccount(bankAccountType,user,5000,"12345555555555555555555555");
+        when(bankAccountTypeRepository.findById(any())).thenReturn(Optional.of(bankAccountType));
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(userRepository.existsByUsername(anyString())).thenReturn(false);
         when(roleRepository.findByName(any())).thenReturn(Optional.of(role));
@@ -116,20 +132,26 @@ public class AuthControllerTest {
         singupRequest.setUsername("jonras1234567");
         singupRequest.setRole(new HashSet<>(Arrays.asList("user")));
         singupRequest.setPassword("password");
+        singupRequest.setName("macieeee");
+        singupRequest.setSurname("sdjasda");
+        singupRequest.setPersonalId("sdasaasda");
+        singupRequest.setIdCardNumber("sdasdasda");
+        singupRequest.setAddressLiving("sdasdadasd");
+        singupRequest.setAddressCorrespondence("sdadsadasdawddq");
+
+
+
         Role role = new Role();
         role.setId(1);
         role.setName(EnumRole.ROLE_USER);
-
         when(userRepository.existsByEmail(anyString())).thenReturn(true);
         when(userRepository.existsByUsername(anyString())).thenReturn(false);
         when(roleRepository.findByName(any())).thenReturn(Optional.of(role));
         when(userRepository.save(any())).thenReturn(new User());
         when(passwordEncoder.encode(anyString())).thenReturn("password");
         String json  = new ObjectMapper().writeValueAsString(singupRequest);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/singup").content(json).contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.ALL_VALUE)).andExpect(result -> assertEquals("{\"message\":\"Error: Email is already in use!\"}", result.getResponse().getContentAsString()));
-        System.out.println(2+2);
     }
 
     @Test
@@ -139,6 +161,12 @@ public class AuthControllerTest {
         singupRequest.setUsername("jonras1234567");
         singupRequest.setRole(new HashSet<>(Arrays.asList("user")));
         singupRequest.setPassword("password");
+        singupRequest.setName("macieeee");
+        singupRequest.setSurname("dadw");
+        singupRequest.setPersonalId("sda");
+        singupRequest.setIdCardNumber("xxzczv");
+        singupRequest.setAddressLiving("xcxve");
+        singupRequest.setAddressCorrespondence("gebsafgg");
         Role role = new Role();
         role.setId(1);
         role.setName(EnumRole.ROLE_USER);

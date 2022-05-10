@@ -9,18 +9,25 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.BankAccount;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.User;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.MessageResponse;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.BankAccountRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.jwt.JwtUtils;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.UserDetailsImpl;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/logged")
 @Log4j2
 public class PageController {
+    @Autowired
+    BankAccountRepository bankAccountRepository;
 
     @GetMapping("/user")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -33,5 +40,19 @@ public class PageController {
     public ResponseEntity<?> adminAccess() {
         return  ResponseEntity.ok(new MessageResponse("Admin content"));
     }
+
+    @GetMapping("/dashboard")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<?> dashboard(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<BankAccount> bankAccounts = bankAccountRepository.findByUser_id(userDetails.getId()).stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
+        String msg="";
+        for (BankAccount bankAccount: bankAccounts) {
+            msg+="Stan konta : "+bankAccount.getMoney()+"\n Oprocentowanie : "+bankAccount.getBankAccountType().getInterest()+"\n Typ rachunku :"+bankAccount.getBankAccountType().getName();
+        }
+
+        return ResponseEntity.ok(new MessageResponse(userDetails.getUsername()+"\n Imie : "+userDetails.getName()+"\n Nazwisko : "+userDetails.getSurname()
+        +"\n Numer karty : "+userDetails.getIdCardNumber()+"\n"+msg));
+    }
+
 
 }

@@ -70,6 +70,32 @@ public class PageControllerTest {
     public void shouldNotAllowAccessToAdminPageToAuthorizedUser() throws Exception{
         mockMvc.perform(get("/api/logged/admin")).andExpect(status().isUnauthorized());
     }
+    @Test
+    public void shouldNotAllowAccessToDashboardToAuthorizedUser() throws Exception{
+        mockMvc.perform(get("/api/logged/dashboard")).andExpect(status().isUnauthorized());
+    }
+    @Test
+    public void shouldNotAllowAccessToDashboardUnauthorizedUser() throws Exception{
+        mockMvc.perform(get("/api/logged/dashboard")).andExpect(status().isUnauthorized());
+    }
+    @Test
+    @WithMockCustomUser
+    public void shouldAllowAccessToDashboardToAuthorizedUser() throws Exception{
+        mockMvc.perform(get("/api/logged/dashboard")).andExpect(status().isOk());
+    }
+    @Test
+    @WithMockCustomAdmin
+    public void shouldAllowAccessToDashboardToAuthorizedAdmin() throws Exception{
+        mockMvc.perform(get("/api/logged/dashboard")).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockCustomAdmin
+    public void shouldAllowAccessToDashboardToAuthorizedAdminCheckMessage() throws Exception{
+        mockMvc.perform(get("/api/logged/dashboard")).andExpect(status().isOk()).andExpect(result -> assertEquals(result.getResponse().getContentAsString(), "{\"message\":\"adminadmin\\n Imie : null\\n Nazwisko : null\\n Numer karty : null\\n\"}"));
+    }
+
+
 
 
 
