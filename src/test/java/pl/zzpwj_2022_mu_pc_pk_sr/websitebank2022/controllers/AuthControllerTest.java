@@ -99,11 +99,11 @@ public class AuthControllerTest {
         singupRequest.setRole(new HashSet<>(Arrays.asList("user")));
         singupRequest.setPassword("password");
         singupRequest.setName("macieeee");
-        singupRequest.setSurname("sdjasda");
-        singupRequest.setPersonalId("sdasaasda");
-        singupRequest.setIdCardNumber("sdasdasda");
-        singupRequest.setAddressLiving("sdasdadasd");
-        singupRequest.setAddressCorrespondence("sdadsadasdawddq");
+        singupRequest.setSurname("dadw");
+        singupRequest.setPersonalId("sda");
+        singupRequest.setIdCardNumber("xxzczv");
+        singupRequest.setAddressLiving("xcxve");
+        singupRequest.setAddressCorrespondence("gebsafgg");
         Role role = new Role();
         role.setId(1);
         role.setName(EnumRole.ROLE_USER);
