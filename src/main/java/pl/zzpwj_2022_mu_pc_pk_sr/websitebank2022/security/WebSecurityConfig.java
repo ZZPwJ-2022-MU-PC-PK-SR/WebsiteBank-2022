@@ -1,5 +1,6 @@
 package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,50 +11,63 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.jwt.AuthEntryPointJwt;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.jwt.AuthTokenFilter;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.UserDetailsServiceImpl;
 
-@Configuration
+
 @EnableWebSecurity
+@Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-   @Autowired
-   UserDetailsServiceImpl userDetailsService;
-   @Autowired
+     UserDetailsService userDetailsService;
     private AuthEntryPointJwt authEntryPointJwt;
-   @Bean
-    public AuthTokenFilter authJwtTokenFilter(){
-       return new AuthTokenFilter();
-   }
-   @Override
-    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-       authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-   }
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
 
-   @Bean
+    @Autowired
+    public WebSecurityConfig(UserDetailsService userDetailsService, AuthEntryPointJwt authEntryPointJwt, CustomAccessDeniedHandler customAccessDeniedHandler) {
+        this.userDetailsService = userDetailsService;
+        this.authEntryPointJwt = authEntryPointJwt;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
+    }
+
+    @Bean
+    public AuthTokenFilter authJwtTokenFilter() {
+        return new AuthTokenFilter();
+    }
+
     @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception{
-       return super.authenticationManagerBean();
-   }
-   @Bean
-    public PasswordEncoder passwordEncoder(){
-       return new BCryptPasswordEncoder();
-   }
-   @Override
-    protected void configure(HttpSecurity http) throws Exception{
-       http.cors().and().csrf().disable()
-               .exceptionHandling().authenticationEntryPoint(authEntryPointJwt)
-               .and()
-               .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-               .and()
-               .authorizeRequests().antMatchers("/api/auth/**").permitAll()
-               .antMatchers("/api/logged/**").permitAll()
-               .anyRequest().authenticated().and().formLogin().loginPage("/login.html").defaultSuccessUrl("/api/auth/user", true).permitAll();
-       http.addFilterBefore(authJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-   }
+    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }
+
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and().csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(authEntryPointJwt).accessDeniedHandler(customAccessDeniedHandler)
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests().antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/api/logged/**").permitAll()
+                .anyRequest().authenticated();
+        http.addFilterBefore(authJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+    }
 
 }

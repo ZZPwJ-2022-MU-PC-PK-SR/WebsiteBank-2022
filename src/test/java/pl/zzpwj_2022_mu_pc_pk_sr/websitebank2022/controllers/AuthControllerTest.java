@@ -1,13 +1,11 @@
 package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.TestingAuthenticationProvider;
@@ -23,6 +21,7 @@ import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.LoginRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.SingupRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.RoleRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.UserRepository;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.WebSecurityConfig;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.jwt.JwtUtils;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.UserDetailsImpl;
 
@@ -36,7 +35,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+@SpringBootTest
+@Import(WebSecurityConfig.class)
 public class AuthControllerTest {
 
 
@@ -129,6 +129,7 @@ public class AuthControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/singup").content(json).contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.ALL_VALUE)).andExpect(result -> assertEquals("{\"message\":\"Error: Email is already in use!\"}", result.getResponse().getContentAsString()));
+        System.out.println(2+2);
     }
 
     @Test

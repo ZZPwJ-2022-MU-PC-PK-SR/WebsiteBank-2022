@@ -86,15 +86,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>1.16.3</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>1.17.1</version>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.200</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -197,33 +191,34 @@
                 </dependency>
             </dependencies>
             <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.graalvm.buildtools</groupId>
-                        <artifactId>native-maven-plugin</artifactId>
-                        <version>${native-buildtools.version}</version>
-                        <extensions>true</extensions>
-                        <executions>
-                            <execution>
-                                <id>test-native</id>
-                                <phase>test</phase>
-                                <goals>
-                                    <goal>test</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>build-native</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>build</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
+                <!--                <plugins>-->
+                <!--                    <plugin>-->
+                <!--                        <groupId>org.graalvm.buildtools</groupId>-->
+                <!--                        <artifactId>native-maven-plugin</artifactId>-->
+                <!--                        <version>${native-buildtools.version}</version>-->
+                <!--                        <extensions>true</extensions>-->
+                <!--                        <executions>-->
+                <!--                            <execution>-->
+                <!--                                <id>test-native</id>-->
+                <!--                                <phase>test</phase>-->
+                <!--                                <goals>-->
+                <!--                                    <goal>test</goal>-->
+                <!--                                </goals>-->
+                <!--                            </execution>-->
+                <!--                            <execution>-->
+                <!--                                <id>build-native</id>-->
+                <!--                                <phase>package</phase>-->
+                <!--                                <goals>-->
+                <!--                                    <goal>build</goal>-->
+                <!--                                </goals>-->
+                <!--                            </execution>-->
+                <!--                        </executions>-->
+                <!--                    </plugin>-->
+                <!--                </plugins>-->
             </build>
         </profile>
     </profiles>
 
 </project>
+
 
