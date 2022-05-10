@@ -27,10 +27,7 @@ import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.jwt.JwtUtils;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.UserDetailsImpl;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 //@CrossOrigin(origins = "*", maxAge = 3600)
@@ -100,7 +97,13 @@ public class AuthController {
         user.setRoles(roles);
         userRepository.save(user);
         user = userRepository.findByEmail(user.getEmail()).get();
-        BankAccount bankAccount = new BankAccount(bankAccountType,user,1000);
+        String accountNumber = "";
+        for(int i = 0 ; i < 26; i++){
+            int rand = (new Random().nextInt(10));
+            accountNumber += String.valueOf(rand);
+
+        }
+        BankAccount bankAccount = new BankAccount(bankAccountType,user,1000, accountNumber);
         bankAccountRepository.save(bankAccount);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
