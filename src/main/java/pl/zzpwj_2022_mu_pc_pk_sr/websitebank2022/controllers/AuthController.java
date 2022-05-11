@@ -93,10 +93,10 @@ public class AuthController {
                 }
             });
         }
-        BankAccountType bankAccountType = bankAccountTypeRepository.findById(1L).get();
+        BankAccountType bankAccountType = bankAccountTypeRepository.findById(1L).orElseThrow(() -> new RuntimeException("Error: Bank Account Type is not found."));
         user.setRoles(roles);
         userRepository.save(user);
-        user = userRepository.findByEmail(user.getEmail()).get();
+        user = userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new RuntimeException("Error: User is not found."));
         String accountNumber = "";
         for(int i = 0 ; i < 26; i++){
             int rand = (new Random().nextInt(10));

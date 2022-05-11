@@ -119,6 +119,7 @@ public class AuthControllerTest {
         when(roleRepository.findByName(any())).thenReturn(Optional.of(role));
         when(userRepository.save(any())).thenReturn(new User());
         when(passwordEncoder.encode(anyString())).thenReturn("password");
+        when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
         String json  = new ObjectMapper().writeValueAsString(singupRequest);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/singup").content(json).contentType(MediaType.APPLICATION_JSON)
