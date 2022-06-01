@@ -26,8 +26,6 @@ public class BankAccountType {
     @Size(max = 60)
     private String name;
 
-    @OneToMany(mappedBy = "bankAccountType")
-    private List<BankAccount> BankAccountTypeAssoc;
 
     public BankAccountType() {
     }
@@ -79,11 +77,4 @@ public class BankAccountType {
         this.id = id;
     }
 
-    public List<BankAccount> getBankAccountTypeAssoc() {
-        return BankAccountTypeAssoc;
-    }
-
-    public void setBankAccountTypeAssoc(List<BankAccount> bankAccountTypeAssoc) {
-        BankAccountTypeAssoc = bankAccountTypeAssoc;
-    }
 }
