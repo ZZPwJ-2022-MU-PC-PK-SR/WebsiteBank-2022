@@ -3,6 +3,8 @@ package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.controllers;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,13 +19,12 @@ import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.TransactionRepositor
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.TransactionStatusRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.TransactionTypeRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.jwt.JwtUtils;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.TransactionHistoryService;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.UserDetailsImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -39,6 +40,8 @@ public class PageController {
     TransactionTypeRepository transactionTypeRepository;
     @Autowired
     TransactionStatusRepository transactionStatusRepository;
+    @Autowired
+    TransactionHistoryService transactionHistoryService;
     @GetMapping("/user")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> userAccess(@AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -99,7 +102,51 @@ public class PageController {
 //        BankAccount bankAccount = new BankAccount(bankAccountType,user,1000, accountNumber);
 //        bankAccountRepository.save(bankAccount);
 //        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+
     }
 
+    @GetMapping("/get_history")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<?> getTransactionsHistory(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                    @RequestParam(defaultValue = "0") Double greaterThanAmount,
+                                                    @RequestParam(defaultValue = "1e8") Double lowerThanAmount,
+                                                    @RequestParam(required = false)
+                                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date greaterThanDate,
+                                                    @RequestParam(required = false)
+                                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date lowerThanDate,
+                                                    @RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "30") int size,
+                                                    @RequestParam(defaultValue = "") List<String> sortList,
+                                                    @RequestParam(defaultValue = "DESC") Sort.Direction sortOrder) {
+        List<Transaction> transactionsList = transactionHistoryService
+                .getTransactionsHistory(userDetails.getId(),
+                        greaterThanAmount,
+                        lowerThanAmount,
+                        greaterThanDate,
+                        lowerThanDate,
+                        page,
+                        size,
+                        sortList,
+                        sortOrder.toString());
+        return ResponseEntity.ok(getTransactionHistoryStructure(transactionsList));
+    }
+
+    private List<Map<String, Object>> getTransactionHistoryStructure(List<Transaction> transactionsList) {
+        List<Map<String, Object>> responseList = new ArrayList<>();
+        for (Transaction t : transactionsList) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", t.getId());
+            response.put("type", t.getType());
+            response.put("from", t.getFrom().getAccountNumber());
+            response.put("toAccountNumber", t.getToAccountNumber());
+            response.put("isExternal", t.getIsExternal());
+            response.put("status", t.getStatus());
+            response.put("transferTitle", t.getTransferTitle());
+            response.put("amount", t.getAmount());
+            response.put("date", t.getDate());
+            responseList.add(response);
+        }
+        return responseList;
+    }
 
 }

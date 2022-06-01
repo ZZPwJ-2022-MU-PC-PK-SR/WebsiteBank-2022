@@ -95,8 +95,28 @@ public class PageControllerTest {
         mockMvc.perform(get("/api/logged/dashboard")).andExpect(status().isOk()).andExpect(result -> assertEquals(result.getResponse().getContentAsString(), "{\"message\":\"adminadmin\\n Imie : null\\n Nazwisko : null\\n Numer karty : null\\n\"}"));
     }
 
+    @Test
+    @WithMockCustomUser
+    public void shouldReturnTransactionHistory() throws Exception {
+        mockMvc.perform(get("/api/logged/get_history")).andExpect(status().isOk());
+    }
 
+    @Test
+    @WithMockCustomUser
+    public void shouldReturnTransactionHistoryWithParams() throws Exception {
+        mockMvc.perform(get("/api/logged/get_history")
+                        .param("sortList", "amount,date"))
+                .andExpect(status().isOk());
+    }
 
+    @Test
+    @WithMockCustomUser
+    public void shouldReturnTransactionHistoryWithParamsAndValues() throws Exception {
+        mockMvc.perform(get("/api/logged/get_history")
+                .param("sortList", "amount,date")
+                .param("transferTitle", "ASC,DESC"))
+                .andExpect(status().isOk());
+    }
 
 
 }
