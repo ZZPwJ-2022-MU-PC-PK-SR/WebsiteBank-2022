@@ -9,9 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.util.NestedServletException;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.mockusers.WithMockCustomAdmin;
@@ -19,7 +17,6 @@ import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.mockusers.WithMockCustomUser;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.AuthorizationCode;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.User;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.CodeGenerateRequest;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.CodeValidateRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.AuthorizationCodeRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.UserRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.WebSecurityConfig;
@@ -33,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Import({WebSecurityConfig.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class AuthorizationCodeTest {
+public class AuthorizationGenerateCodesTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -46,6 +43,7 @@ public class AuthorizationCodeTest {
 
     @BeforeAll
     public void initialize() {
+        userRepository.deleteAll();
         userRepository.save(new User("usernamefine","user@yourdomain.com","password",
                 "testname", "testsurname", "012345678910", "PPP123123",
                 "testaddress", "testcorrespondence"));
@@ -115,5 +113,11 @@ public class AuthorizationCodeTest {
             assertInstanceOf(RuntimeException.class, ex.getCause());
             assertEquals("No user with such username found",ex.getCause().getMessage());
         }
+    }
+
+    @AfterAll
+    public void clearTables() {
+        authorizationCodeRepository.deleteAll();
+        userRepository.deleteAll();
     }
 }
