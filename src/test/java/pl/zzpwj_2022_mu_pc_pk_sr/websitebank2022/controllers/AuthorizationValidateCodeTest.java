@@ -62,6 +62,7 @@ public class AuthorizationValidateCodeTest {
 
     @BeforeEach
     public void compromiseInit() {
+        System.out.println(1);
         firstCode.setActive(true);
         secondCode.setActive(true);
         lastCode.setActive(true);
