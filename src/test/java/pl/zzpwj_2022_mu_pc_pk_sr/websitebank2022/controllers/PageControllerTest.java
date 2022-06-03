@@ -29,21 +29,17 @@ public class PageControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private UserRepository userRepository;
 
 
 
 
     @Test
     public void shouldNotAllowAccessToUnauthorizedUser() throws Exception{
-        userRepository.findAll();
         mockMvc.perform(get("/api/logged/user")).andExpect(status().isUnauthorized());
     }
 
     @Test
     public void shouldNotAllowAccessToUnauthorizedAdmin() throws Exception{
-        userRepository.findAll();
         mockMvc.perform(get("/api/logged/admin")).andExpect(status().isUnauthorized());
     }
 
