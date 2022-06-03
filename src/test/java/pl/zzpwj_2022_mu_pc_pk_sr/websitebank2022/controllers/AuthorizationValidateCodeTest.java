@@ -61,7 +61,7 @@ public class AuthorizationValidateCodeTest {
     }
 
     @BeforeEach
-    public void compromiseInit() throws InterruptedException {
+    public void compromiseInit() {
         firstCode.setActive(true);
         secondCode.setActive(true);
         lastCode.setActive(true);
@@ -76,14 +76,6 @@ public class AuthorizationValidateCodeTest {
     @WithMockCustomUser
     @Test
     public void checkCodeFirstValidTest() throws Exception {
-        firstCode.setActive(true);
-        secondCode.setActive(true);
-        lastCode.setActive(true);
-
-        authorizationCodeRepository.save(firstCode);
-        authorizationCodeRepository.save(secondCode);
-        authorizationCodeRepository.save(lastCode);
-
         request.setCode(firstCode.getCode());
         json = mapper.writeValueAsString(request);
 
@@ -96,13 +88,6 @@ public class AuthorizationValidateCodeTest {
     @WithMockCustomUser
     @Test
     public void checkCodeSecondAndLastInvalidTest() throws Exception {
-        firstCode.setActive(true);
-        secondCode.setActive(true);
-        lastCode.setActive(true);
-
-        authorizationCodeRepository.save(firstCode);
-        authorizationCodeRepository.save(secondCode);
-        authorizationCodeRepository.save(lastCode);
 
         request.setCode(secondCode.getCode());
         json = mapper.writeValueAsString(request);
@@ -124,13 +109,7 @@ public class AuthorizationValidateCodeTest {
     @WithMockCustomUser
     @Test
     public void checkCodeSecondValidAfterFirstUsed() throws Exception {
-        firstCode.setActive(true);
-        secondCode.setActive(true);
-        lastCode.setActive(true);
 
-        authorizationCodeRepository.save(firstCode);
-        authorizationCodeRepository.save(secondCode);
-        authorizationCodeRepository.save(lastCode);
         request.setCode(firstCode.getCode());
         json = mapper.writeValueAsString(request);
 
@@ -151,13 +130,7 @@ public class AuthorizationValidateCodeTest {
     @WithMockCustomUser
     @Test
     public void checkCodeCannotUseSameCodeTwice() throws Exception {
-        firstCode.setActive(true);
-        secondCode.setActive(true);
-        lastCode.setActive(true);
 
-        authorizationCodeRepository.save(firstCode);
-        authorizationCodeRepository.save(secondCode);
-        authorizationCodeRepository.save(lastCode);
         request.setCode(firstCode.getCode());
         json = mapper.writeValueAsString(request);
 
@@ -175,13 +148,7 @@ public class AuthorizationValidateCodeTest {
     @WithMockCustomUser
     @Test
     public void checkCodeReturnFalseIfNoCodesPresent() throws Exception {
-        firstCode.setActive(true);
-        secondCode.setActive(true);
-        lastCode.setActive(true);
 
-        authorizationCodeRepository.save(firstCode);
-        authorizationCodeRepository.save(secondCode);
-        authorizationCodeRepository.save(lastCode);
         firstCode.setActive(false);
         secondCode.setActive(false);
         lastCode.setActive(false);
