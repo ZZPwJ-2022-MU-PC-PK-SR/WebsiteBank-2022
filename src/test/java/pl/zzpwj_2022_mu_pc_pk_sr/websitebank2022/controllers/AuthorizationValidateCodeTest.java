@@ -71,13 +71,19 @@ public class AuthorizationValidateCodeTest {
         authorizationCodeRepository.save(lastCode);
 
         request = new CodeValidateRequest();
-        Thread.sleep(250);
     }
 
     @WithMockCustomUser
     @Test
     public void checkCodeFirstValidTest() throws Exception {
-        System.out.println(authorizationCodeRepository.findAll());
+        firstCode.setActive(true);
+        secondCode.setActive(true);
+        lastCode.setActive(true);
+
+        authorizationCodeRepository.save(firstCode);
+        authorizationCodeRepository.save(secondCode);
+        authorizationCodeRepository.save(lastCode);
+
         request.setCode(firstCode.getCode());
         json = mapper.writeValueAsString(request);
 
@@ -90,7 +96,13 @@ public class AuthorizationValidateCodeTest {
     @WithMockCustomUser
     @Test
     public void checkCodeSecondAndLastInvalidTest() throws Exception {
-        System.out.println(authorizationCodeRepository.findAll());
+        firstCode.setActive(true);
+        secondCode.setActive(true);
+        lastCode.setActive(true);
+
+        authorizationCodeRepository.save(firstCode);
+        authorizationCodeRepository.save(secondCode);
+        authorizationCodeRepository.save(lastCode);
 
         request.setCode(secondCode.getCode());
         json = mapper.writeValueAsString(request);
@@ -112,8 +124,13 @@ public class AuthorizationValidateCodeTest {
     @WithMockCustomUser
     @Test
     public void checkCodeSecondValidAfterFirstUsed() throws Exception {
-        System.out.println(authorizationCodeRepository.findAll());
+        firstCode.setActive(true);
+        secondCode.setActive(true);
+        lastCode.setActive(true);
 
+        authorizationCodeRepository.save(firstCode);
+        authorizationCodeRepository.save(secondCode);
+        authorizationCodeRepository.save(lastCode);
         request.setCode(firstCode.getCode());
         json = mapper.writeValueAsString(request);
 
@@ -134,8 +151,13 @@ public class AuthorizationValidateCodeTest {
     @WithMockCustomUser
     @Test
     public void checkCodeCannotUseSameCodeTwice() throws Exception {
-        System.out.println(authorizationCodeRepository.findAll());
+        firstCode.setActive(true);
+        secondCode.setActive(true);
+        lastCode.setActive(true);
 
+        authorizationCodeRepository.save(firstCode);
+        authorizationCodeRepository.save(secondCode);
+        authorizationCodeRepository.save(lastCode);
         request.setCode(firstCode.getCode());
         json = mapper.writeValueAsString(request);
 
@@ -153,8 +175,13 @@ public class AuthorizationValidateCodeTest {
     @WithMockCustomUser
     @Test
     public void checkCodeReturnFalseIfNoCodesPresent() throws Exception {
-        System.out.println(authorizationCodeRepository.findAll());
+        firstCode.setActive(true);
+        secondCode.setActive(true);
+        lastCode.setActive(true);
 
+        authorizationCodeRepository.save(firstCode);
+        authorizationCodeRepository.save(secondCode);
+        authorizationCodeRepository.save(lastCode);
         firstCode.setActive(false);
         secondCode.setActive(false);
         lastCode.setActive(false);
