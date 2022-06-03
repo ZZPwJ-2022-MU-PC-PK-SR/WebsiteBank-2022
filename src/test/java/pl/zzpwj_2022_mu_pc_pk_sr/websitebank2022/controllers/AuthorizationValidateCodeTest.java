@@ -61,8 +61,7 @@ public class AuthorizationValidateCodeTest {
     }
 
     @BeforeEach
-    public void compromiseInit() {
-        System.out.println(1);
+    public void compromiseInit() throws InterruptedException {
         firstCode.setActive(true);
         secondCode.setActive(true);
         lastCode.setActive(true);
@@ -72,6 +71,7 @@ public class AuthorizationValidateCodeTest {
         authorizationCodeRepository.save(lastCode);
 
         request = new CodeValidateRequest();
+        Thread.sleep(250);
     }
 
     @WithMockCustomUser
