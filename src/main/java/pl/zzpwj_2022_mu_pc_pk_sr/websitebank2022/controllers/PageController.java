@@ -1,7 +1,11 @@
 package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.*;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.TransactionRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.MessageResponse;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.TransactionResponse;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.BankAccountRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.TransactionRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.TransactionStatusRepository;
@@ -24,6 +29,8 @@ import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.UserDetailsImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.DataInput;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -109,7 +116,7 @@ public class PageController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getTransactionsHistory(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                     @RequestParam(defaultValue = "0") Double greaterThanAmount,
-                                                    @RequestParam(defaultValue = "1e8") Double lowerThanAmount,
+                                                    @RequestParam(defaultValue = "1e12") Double lowerThanAmount,
                                                     @RequestParam(required = false)
                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date greaterThanDate,
                                                     @RequestParam(required = false)
@@ -128,25 +135,7 @@ public class PageController {
                         size,
                         sortList,
                         sortOrder.toString());
-        return ResponseEntity.ok(getTransactionHistoryStructure(transactionsList));
-    }
-
-    private List<Map<String, Object>> getTransactionHistoryStructure(List<Transaction> transactionsList) {
-        List<Map<String, Object>> responseList = new ArrayList<>();
-        for (Transaction t : transactionsList) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("id", t.getId());
-            response.put("type", t.getType());
-            response.put("from", t.getFrom().getAccountNumber());
-            response.put("toAccountNumber", t.getToAccountNumber());
-            response.put("isExternal", t.getIsExternal());
-            response.put("status", t.getStatus());
-            response.put("transferTitle", t.getTransferTitle());
-            response.put("amount", t.getAmount());
-            response.put("date", t.getDate());
-            responseList.add(response);
-        }
-        return responseList;
+        return ResponseEntity.ok(transactionHistoryService.getTransactionHistoryStructure(transactionsList));
     }
 
 }

@@ -1,12 +1,14 @@
 package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.Transaction;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.TransactionResponse;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.TransactionHistoryRepository;
 
 import java.sql.Timestamp;
@@ -19,10 +21,6 @@ public class TransactionHistoryService {
 
     @Autowired
     private TransactionHistoryRepository repository;
-
-//    public List<Transaction> findAllProductsByUserId(Long user_id) {
-//        return repository.findByFrom_User_id(user_id);
-//    }
 
     public List<Transaction> getTransactionsHistory(Long id,
                                                     Double greaterThanAmount,
@@ -53,4 +51,13 @@ public class TransactionHistoryService {
         }
         return sorts;
     }
+
+    public ArrayList<TransactionResponse> getTransactionHistoryStructure(List<Transaction> transactionsList) {
+        ArrayList<TransactionResponse> list = new ArrayList<>();
+        for (Transaction t : transactionsList) {
+            list.add(new TransactionResponse(t));
+        }
+        return list;
+    }
+
 }
