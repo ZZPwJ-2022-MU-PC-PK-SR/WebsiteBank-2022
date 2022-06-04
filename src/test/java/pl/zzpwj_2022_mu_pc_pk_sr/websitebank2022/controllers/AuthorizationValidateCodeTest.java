@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.mockusers.WithMockCustomUser;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Import({WebSecurityConfig.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class AuthorizationValidateCodeTest {
     @Autowired
     private MockMvc mockMvc;
@@ -43,9 +45,8 @@ public class AuthorizationValidateCodeTest {
     String json;
     ObjectMapper mapper = new ObjectMapper();
 
-    @BeforeAll
-    public void initialize() throws NoSuchAlgorithmException {
-        userRepository.deleteAll();
+    @BeforeEach
+    public void compromiseInit() throws NoSuchAlgorithmException {
         User user = new User("usernamefine","user@yourdomain.com","password",
                 "testname", "testsurname", "012345678910", "PPP123123",
                 "testaddress", "testcorrespondence");
@@ -54,17 +55,6 @@ public class AuthorizationValidateCodeTest {
         firstCode = new AuthorizationCode(user,0);
         secondCode = new AuthorizationCode(user,1);
         lastCode = new AuthorizationCode(user,2);
-
-        authorizationCodeRepository.save(firstCode);
-        authorizationCodeRepository.save(secondCode);
-        authorizationCodeRepository.save(lastCode);
-    }
-
-    @BeforeEach
-    public void compromiseInit() {
-        firstCode.setActive(true);
-        secondCode.setActive(true);
-        lastCode.setActive(true);
 
         authorizationCodeRepository.save(firstCode);
         authorizationCodeRepository.save(secondCode);
@@ -164,12 +154,6 @@ public class AuthorizationValidateCodeTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.ALL_VALUE))
                 .andExpect(result-> assertFalse((Boolean) mapper.readValue(result.getResponse().getContentAsString(), Map.class).get("valid")));
-    }
-
-    @AfterAll
-    public void clearTables() {
-        authorizationCodeRepository.deleteAll();
-        userRepository.deleteAll();
     }
 
 }
