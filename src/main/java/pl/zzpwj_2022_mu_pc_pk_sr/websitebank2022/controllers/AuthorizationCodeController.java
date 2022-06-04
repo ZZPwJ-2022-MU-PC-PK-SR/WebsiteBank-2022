@@ -84,4 +84,13 @@ public class AuthorizationCodeController {
         return ResponseEntity.ok().body(new BooleanResponse(response));
 
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("test")
+    public ResponseEntity<?> testTest(Principal principal) {
+        CodeValidateRequest req = new CodeValidateRequest();
+        req.setCode("4026");
+        ResponseEntity<?> resp = checkCode(req,principal);
+        return ResponseEntity.ok().body(resp.getBody());
+    }
 }
