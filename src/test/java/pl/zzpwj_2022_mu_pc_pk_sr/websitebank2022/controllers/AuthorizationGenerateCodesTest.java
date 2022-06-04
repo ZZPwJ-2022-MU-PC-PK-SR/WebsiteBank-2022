@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.util.NestedServletException;
@@ -31,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Import({WebSecurityConfig.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class AuthorizationGenerateCodesTest {
     @Autowired
     private MockMvc mockMvc;
@@ -46,14 +44,13 @@ public class AuthorizationGenerateCodesTest {
     @BeforeAll
     public void initialize() {
         userRepository.deleteAll();
-
+        userRepository.save(new User("usernamefine","user@yourdomain.com","password",
+                "testname", "testsurname", "012345678910", "PPP123123",
+                "testaddress", "testcorrespondence"));
     }
 
     @BeforeEach
     public void generateInit() throws JsonProcessingException {
-        userRepository.save(new User("usernamefine","user@yourdomain.com","password",
-                "testname", "testsurname", "012345678910", "PPP123123",
-                "testaddress", "testcorrespondence"));
         CodeGenerateRequest request = new CodeGenerateRequest();
         request.setUsername("usernamefine");
         json = new ObjectMapper().writeValueAsString(request);
@@ -118,4 +115,9 @@ public class AuthorizationGenerateCodesTest {
         }
     }
 
+    @AfterAll
+    public void clearTables() {
+        authorizationCodeRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 }
