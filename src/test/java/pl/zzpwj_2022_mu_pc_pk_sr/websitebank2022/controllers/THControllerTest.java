@@ -35,8 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
-@Import({ WebSecurityConfig.class})
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class THControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -51,6 +49,7 @@ public class THControllerTest {
     @Autowired
     private TransactionHistoryRepository thRepository;
     private List<TransactionResponse> transactionList;
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void init() {
@@ -80,7 +79,7 @@ public class THControllerTest {
             t.setStatus(testTransactionStatus);
             t.setTransferTitle("nazwa" + i);
             t.setAmount(1000.0 + i);
-            Date date = null;
+            Date date;
             try {
                 date = new SimpleDateFormat("yyyy-MM-dd").parse("2020-01-0"+i);
             } catch (ParseException e) {
@@ -101,26 +100,24 @@ public class THControllerTest {
     @Test
     @WithMockCustomUserTransaction
     public void shouldReturnTransactionHistoryWithSorting() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
         transactionList.sort(Comparator.comparing(TransactionResponse::getDate).reversed());
-        System.out.println(mockMvc.perform(get("/api/logged/get_history")
+        mockMvc.perform(get("/api/logged/get_history")
                         .param("sortList", "date")
                         .param("sortOrder", "DESC"))
                 .andExpect(status().isOk()).andExpect(result -> assertEquals(result.getResponse().getContentAsString(),
-                        objectMapper.writeValueAsString(transactionList))));
+                        objectMapper.writeValueAsString(transactionList)));
 
     }
 
     @Test
     @WithMockCustomUserTransaction
     public void shouldReturnTransactionHistoryWithFilters() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
         transactionList.sort(Comparator.comparing(TransactionResponse::getDate).reversed());
         CollectionUtils.filter(transactionList, o ->
                 ((TransactionResponse) o).getAmount() >= 1002 &&
                 ((TransactionResponse) o).getAmount() <= 1006 &&
                 ((TransactionResponse) o).getDate().matches("2020-01-0[2-4]"));
-        System.out.println(mockMvc.perform(get("/api/logged/get_history")
+        mockMvc.perform(get("/api/logged/get_history")
                         .param("greaterThanAmount", "1002")
                         .param("lowerThanAmount", "1006")
                         .param("greaterThanDate", "2020-01-02")
@@ -128,31 +125,30 @@ public class THControllerTest {
                         .param("sortList", "date")
                         .param("sortOrder", "DESC"))
                 .andExpect(status().isOk()).andExpect(result -> assertEquals(result.getResponse().getContentAsString(),
-                        objectMapper.writeValueAsString(transactionList))));
+                        objectMapper.writeValueAsString(transactionList)));
 
     }
 
     @Test
     @WithMockCustomUserTransaction
     public void shouldReturnTransactionHistoryWithPagination() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        transactionList.sort(Comparator.comparing(TransactionResponse::getId));
-        System.out.println(mockMvc.perform(get("/api/logged/get_history")
+        transactionList.sort(Comparator.comparing(TransactionResponse::getAmount));
+        mockMvc.perform(get("/api/logged/get_history")
                             .param("page", "0")
                             .param("size", "3")
-                            .param("sortList", "id")
+                            .param("sortList", "amount")
                             .param("sortOrder", "ASC"))
                     .andExpect(status().isOk()).andExpect(result -> assertEquals(result.getResponse().getContentAsString(),
                             objectMapper.writeValueAsString(transactionList
-                                    .subList(0, 3)))));
-        System.out.println(mockMvc.perform(get("/api/logged/get_history")
+                                    .subList(0, 3))));
+        mockMvc.perform(get("/api/logged/get_history")
                             .param("page", "1")
                             .param("size", "3")
-                            .param("sortList", "id")
+                            .param("sortList", "amount")
                             .param("sortOrder", "ASC"))
                     .andExpect(status().isOk()).andExpect(result -> assertEquals(result.getResponse().getContentAsString(),
                             objectMapper.writeValueAsString(transactionList
-                                    .subList(3, 6)))));
+                                    .subList(3, 6))));
 
     }
 
