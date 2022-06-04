@@ -5,15 +5,16 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "bank_accounts")
-@IdClass(BankAccountTypeUserID.class)
 public class BankAccount {
-
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne
     @JoinColumn(name ="bank_account_types_id", referencedColumnName = "id")
     private BankAccountType bankAccountType;
 
-    @Id
+
     @ManyToOne
     @JoinColumn (name ="user_id", referencedColumnName = "id")
     private User user;
@@ -22,14 +23,14 @@ public class BankAccount {
     private double money;
 
     @Column(name = "account_number")
-    private String account_number;
+    private String accountNumber;
 
 
-    public BankAccount(BankAccountType bankAccountType, User user, double money, String account_number) {
+    public BankAccount(BankAccountType bankAccountType, User user, double money, String accountNumber) {
         this.bankAccountType = bankAccountType;
         this.user = user;
         this.money = money;
-        this.account_number = account_number;
+        this.accountNumber = accountNumber;
     }
 
     public BankAccount() {
@@ -60,12 +61,12 @@ public class BankAccount {
         this.money = money;
     }
 
-    public String getAccount_number() {
-        return account_number;
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
-    public void setAccount_number(String account_number) {
-        this.account_number = account_number;
+    public void setAccountNumber(String account_number) {
+        this.accountNumber = account_number;
     }
 
 }
