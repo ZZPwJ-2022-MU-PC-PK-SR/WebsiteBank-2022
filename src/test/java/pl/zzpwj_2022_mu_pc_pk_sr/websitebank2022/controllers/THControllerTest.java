@@ -2,34 +2,23 @@ package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.controllers;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cglib.core.CollectionUtils;
-import org.springframework.context.annotation.Import;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.mockusers.WithMockCustomUser;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.mockusers.WithMockCustomUserTransaction;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.*;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.TransactionResponse;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.*;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.WebSecurityConfig;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.UserDetailsImpl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -126,6 +115,30 @@ public class THControllerTest {
                         .param("sortOrder", "DESC"))
                 .andExpect(status().isOk()).andExpect(result -> assertEquals(result.getResponse().getContentAsString(),
                         objectMapper.writeValueAsString(transactionList)));
+
+    }
+
+    @Test
+    @WithMockCustomUserTransaction
+    public void shouldReturnTransactionHistoryWithBadAmountFilters() throws Exception {
+        mockMvc.perform(get("/api/logged/get_history")
+                        .param("greaterThanAmount", "1004")
+                        .param("lowerThanAmount", "1003"))
+                .andExpect(status().is4xxClientError()).andExpect(result ->
+                        assertEquals(result.getResponse().getContentAsString(),
+                                "{\"message\":\"greaterThanAmount can't be greater than lowerThanAmount\"}"));
+
+    }
+
+    @Test
+    @WithMockCustomUserTransaction
+    public void shouldReturnTransactionHistoryWithBadDateFilters() throws Exception {
+        mockMvc.perform(get("/api/logged/get_history")
+                        .param("greaterThanDate", "2020-01-06")
+                        .param("lowerThanDate", "2020-01-04"))
+                .andExpect(status().is4xxClientError()).andExpect(result ->
+                        assertEquals(result.getResponse().getContentAsString(),
+                                "{\"message\":\"greaterThanDate can't be after lowerThanDate\"}"));
 
     }
 

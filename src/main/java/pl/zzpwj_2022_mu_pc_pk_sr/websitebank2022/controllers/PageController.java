@@ -27,10 +27,8 @@ import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.jwt.JwtUtils;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.TransactionHistoryService;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.UserDetailsImpl;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.DataInput;
-import java.io.InputStream;
+import javax.validation.constraints.Size;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -115,8 +113,10 @@ public class PageController {
     @GetMapping("/get_history")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getTransactionsHistory(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                    @RequestParam(defaultValue = "0") Double greaterThanAmount,
-                                                    @RequestParam(defaultValue = "1e12") Double lowerThanAmount,
+                                                    @RequestParam(defaultValue = "0")
+                                                        @Size(max = 9) Double greaterThanAmount,
+                                                    @RequestParam(defaultValue = "1e9")
+                                                        @Size(max = 9) Double lowerThanAmount,
                                                     @RequestParam(required = false)
                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date greaterThanDate,
                                                     @RequestParam(required = false)
@@ -125,6 +125,12 @@ public class PageController {
                                                     @RequestParam(defaultValue = "30") int size,
                                                     @RequestParam(defaultValue = "") List<String> sortList,
                                                     @RequestParam(defaultValue = "DESC") Sort.Direction sortOrder) {
+        if (greaterThanAmount > lowerThanAmount) {
+            return ResponseEntity.badRequest().body(new MessageResponse("greaterThanAmount can't be greater than lowerThanAmount"));
+        }
+        if (greaterThanDate != null && lowerThanDate != null && greaterThanDate.after(lowerThanDate)) {
+            return ResponseEntity.badRequest().body(new MessageResponse("greaterThanDate can't be after lowerThanDate"));
+        }
         List<Transaction> transactionsList = transactionHistoryService
                 .getTransactionsHistory(userDetails.getId(),
                         greaterThanAmount,
