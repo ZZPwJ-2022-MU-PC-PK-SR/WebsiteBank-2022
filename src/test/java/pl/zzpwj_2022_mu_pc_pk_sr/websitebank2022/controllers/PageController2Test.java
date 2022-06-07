@@ -1,25 +1,16 @@
 package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.util.NestedServletException;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.mockusers.WithMockCustomAdmin;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.mockusers.WithMockCustomUser;
@@ -29,17 +20,12 @@ import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.BlockCardReques
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.LoginRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.RequestNewCardRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.*;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.jwt.JwtUtils;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.CheckCode;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.UserDetailsImpl;
 
-import javax.validation.constraints.AssertTrue;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -113,7 +99,7 @@ public class PageController2Test {
         Date newDate = c.getTime();
         BankAccountType bankAccountType = new BankAccountType(4.0,4.0,4.0,"1");
         BankAccount bankAccount = new BankAccount(bankAccountType,user,1000.0,"11111111111111111111111111");
-        Card card = new Card("11111111111111111111111111",newDate,"Active",encoder.encode("123455555555"));
+        Cards card = new Cards("11111111111111111111111111",newDate,"Active",encoder.encode("123455555555"));
         card.setId(1L);
         bankAccountType.setId(1L);
         List<Optional<BankAccount>> list = new ArrayList<>();

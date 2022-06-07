@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "cards")
-public class Card {
+public class Cards {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,10 +18,10 @@ public class Card {
     private String status;
     private String card_number;
 
-    public Card() {
+    public Cards() {
     }
 
-    public Card(String bank_account_id, Date access_date, String status, String card_number) {
+    public Cards(String bank_account_id, Date access_date, String status, String card_number) {
         this.bank_account_id = bank_account_id;
         this.access_date = access_date;
         this.status = status;

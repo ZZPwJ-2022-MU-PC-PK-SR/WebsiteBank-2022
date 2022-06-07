@@ -1,19 +1,10 @@
 package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
-import org.apache.tomcat.util.json.JSONParser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -21,20 +12,15 @@ import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.*;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.AccountRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.BlockCardRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.RequestNewCardRequest;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.TransactionRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.MessageResponse;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.BankAccountRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.TransactionRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.TransactionStatusRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.TransactionTypeRepository;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.TransactionResponse;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.*;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.jwt.JwtUtils;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.CheckCode;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.UserDetailsImpl;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -101,7 +87,7 @@ public class PageController {
 //            return ResponseEntity.ok("Operation finished inCorrectly code is incorrect");
 //        }
         List<BankAccount> bankAccounts = bankAccountRepository.findByUser_id(userDetails.getId()).stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
-        Card card = cardRepository.findById(blockCardRequest.getCardID()).orElseThrow(() -> new RuntimeException("No card with that card id"));
+        Cards card = cardRepository.findById(blockCardRequest.getCardID()).orElseThrow(() -> new RuntimeException("No card with that card id"));
         for (BankAccount bankAccount: bankAccounts) {
             if(bankAccount.getAccountNumber().equals(card.getBank_account_id())){
                 if(card.getStatus().equals("inActive")){
@@ -135,7 +121,7 @@ public class PageController {
         List<BankAccount> bankAccounts = bankAccountRepository.findByUser_id(userDetails.getId()).stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
         for (BankAccount bankAccount: bankAccounts) {
             if(bankAccount.getUser().getId().equals(userDetails.getId())){
-                Card card = new Card(bankAccount.getAccountNumber(),newDate,"active",encoder.encode(cardNUmber));
+                Cards card = new Cards(bankAccount.getAccountNumber(),newDate,"active",encoder.encode(cardNUmber));
                 cardRepository.save(card);
                 return ResponseEntity.ok("Operation finished Correctly");
             }

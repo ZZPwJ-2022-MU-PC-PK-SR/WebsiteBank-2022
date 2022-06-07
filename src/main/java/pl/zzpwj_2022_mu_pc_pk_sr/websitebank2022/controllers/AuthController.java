@@ -1,9 +1,7 @@
 package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.controllers;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.*;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.LoginRequest;
@@ -24,8 +21,6 @@ import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.jwt.JwtUtils;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.UserDetailsImpl;
 
 import javax.validation.Valid;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -117,7 +112,7 @@ public class AuthController {
         c.add(Calendar.YEAR,2);
         Date newDate = c.getTime();
         BankAccount bankAccount = new BankAccount(bankAccountType,user,1000, accountNumber);
-        Card card = new Card(accountNumber,newDate,"active",encoder.encode(cardNUmber));
+        Cards card = new Cards(accountNumber,newDate,"active",encoder.encode(cardNUmber));
         cardRepository.save(card);
         bankAccountRepository.save(bankAccount);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
