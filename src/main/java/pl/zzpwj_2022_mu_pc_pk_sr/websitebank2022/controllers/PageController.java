@@ -64,44 +64,4 @@ public class PageController {
         +"\n Numer karty : "+userDetails.getIdCardNumber()+"\n"+msg));
     }
 
-    @PostMapping("/transaction_begin")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> transactionBegin(@Valid @RequestBody TransactionRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        TransactionType transactionType = transactionTypeRepository.findByName(EnumTransactionType.valueOf(request.getType())).orElseThrow(() -> new RuntimeException("Error: Transaction type is not found"));
-        BankAccount from = bankAccountRepository.findByAccountNumber(request.getFrom()).orElseThrow(() -> new RuntimeException("No account number with that account"));
-        request.setAmount(request.getAmount().replace(',','.'));
-        if (from.getMoney()-Double.parseDouble(request.getAmount())<0) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Not enough cash to process transaction"));
-        }
-        Boolean isExternal = bankAccountRepository.existsBankAccountByAccountNumber(request.getTo());
-        System.out.println(isExternal);
-        boolean enoughMoney = from.getMoney()-Double.parseDouble(request.getAmount())>=0;
-        TransactionStatus status = transactionStatusRepository.findByName(enoughMoney? EnumTransactionStatus.PENDING:EnumTransactionStatus.REJECTED).orElseThrow(() -> new RuntimeException("Error: Transaction status not found"));
-        Date date = new Date();
-        Transaction transaction = new Transaction(transactionType,from,request.getTo(),isExternal,status,request.getTransferTitle(),Double.parseDouble(request.getAmount()),date);
-        transactionRepository.save(transaction);
-        if(enoughMoney) {
-            from.setMoney(from.getMoney()-Double.parseDouble(request.getAmount()));
-            bankAccountRepository.save(from);
-        }
-        return ResponseEntity.ok().body(new MessageResponse("Transfer started succesfully"));
-        // TODO : check transaction types after adding other transaction types
-
-        //Transaction transaction = new Transaction()
-//        BankAccountType bankAccountType = bankAccountTypeRepository.findById(1L).get();
-//        user.setRoles(roles);
-//        userRepository.save(user);
-//        user = userRepository.findByEmail(user.getEmail()).get();
-//        String accountNumber = "";
-//        for(int i = 0 ; i < 26; i++){
-//            int rand = (new Random().nextInt(10));
-//            accountNumber += String.valueOf(rand);
-//
-//        }
-//        BankAccount bankAccount = new BankAccount(bankAccountType,user,1000, accountNumber);
-//        bankAccountRepository.save(bankAccount);
-//        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
-    }
-
-
 }
