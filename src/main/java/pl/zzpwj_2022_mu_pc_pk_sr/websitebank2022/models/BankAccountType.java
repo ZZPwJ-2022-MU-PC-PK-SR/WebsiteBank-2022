@@ -4,6 +4,7 @@ package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -13,16 +14,13 @@ public class BankAccountType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
-    @Size(max = 30)
+    @NotNull
     private double interest;
-    @NotBlank
-    @Size(max = 60)
+    @NotNull
     private double transfer_cost_min;
-    @NotBlank
-    @Size(max = 60)
+    @NotNull
     private double transfer_cost_interest;
-    @NotBlank
+    @NotNull
     @Size(max = 60)
     private String name;
 

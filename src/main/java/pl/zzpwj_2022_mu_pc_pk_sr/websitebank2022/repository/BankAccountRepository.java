@@ -19,4 +19,6 @@ public interface BankAccountRepository extends JpaRepository<BankAccount,Long> {
 
     @Query(value = "SELECT MAX(id) FROM bank_accounts",nativeQuery = true)
     Long getMaxId();
+
+
 }
