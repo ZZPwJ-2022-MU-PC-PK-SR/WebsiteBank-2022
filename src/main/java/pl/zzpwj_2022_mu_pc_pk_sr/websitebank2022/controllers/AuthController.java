@@ -30,25 +30,25 @@ import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
-//@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 @Import(WebSecurityConfig.class)
 public class AuthController {
     @Autowired
-    BankAccountTypeRepository bankAccountTypeRepository;
+    private BankAccountTypeRepository bankAccountTypeRepository;
     @Autowired
-    BankAccountRepository bankAccountRepository;
+    private BankAccountRepository bankAccountRepository;
     @Autowired
-    AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
     @Autowired
-    PasswordEncoder encoder;
+    private PasswordEncoder encoder;
     @Autowired
-    JwtUtils jwtUtils;
+    private JwtUtils jwtUtils;
+
     @PostMapping(path="/singin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));

@@ -1,6 +1,8 @@
 package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +13,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUid = 1L;
     private Long id;
@@ -91,29 +95,6 @@ public class UserDetailsImpl implements UserDetails {
         return username;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public String getPersonalId() {
-        return personalId;
-    }
-
-    public String getIdCardNumber() {
-        return idCardNumber;
-    }
-
-    public String getAddressLiving() {
-        return addressLiving;
-    }
-
-    public String getAddressCorrespondence() {
-        return addressCorrespondence;
-    }
 
     @Override
     public boolean isAccountNonExpired() {
