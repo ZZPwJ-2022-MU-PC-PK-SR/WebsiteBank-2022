@@ -44,6 +44,9 @@ public class THControllerTest {
 
     @BeforeEach
     public void init() {
+        userRepository.deleteAll();
+        bankAccountRepository.deleteAll();
+
         transactionList = new ArrayList<>();
         TransactionType testTransactionType = new TransactionType();
         testTransactionType.setId(1L);
@@ -51,7 +54,9 @@ public class THControllerTest {
         TransactionStatus testTransactionStatus = new TransactionStatus();
         testTransactionStatus.setId(1L);
         transactionStatusRepository.save(testTransactionStatus);
-        User testUser = new User("testuserzz", "testuser@test.com","testpassword",
+
+
+        User testUser = new User("testuser", "testuser@test.com","testpassword",
                 "testname","testsurname","012345678910","PPP123123",
                 "testaddress","testcorrespondence");
         testUser.setId(1L);

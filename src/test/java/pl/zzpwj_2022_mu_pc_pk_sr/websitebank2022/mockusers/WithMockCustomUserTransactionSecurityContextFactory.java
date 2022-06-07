@@ -22,7 +22,7 @@ public class WithMockCustomUserTransactionSecurityContextFactory
         role.setId(1);
         role.setName(EnumRole.ROLE_USER);
         String password = "password";
-        User user = new User("usernamefine25","user@yourdomain.com",password);
+        User user = new User("usernamefine","user@yourdomain.com",password);
         user.setId(1L);
         user.setRoles(new HashSet<>(Arrays.asList(role)));
         UserDetailsImpl principal = UserDetailsImpl.build(user);
