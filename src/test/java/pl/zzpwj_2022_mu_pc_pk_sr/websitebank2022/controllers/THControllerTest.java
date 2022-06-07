@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
-@DirtiesContext(methodMode= DirtiesContext.MethodMode.BEFORE_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class THControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -51,9 +51,10 @@ public class THControllerTest {
         TransactionStatus testTransactionStatus = new TransactionStatus();
         testTransactionStatus.setId(1L);
         transactionStatusRepository.save(testTransactionStatus);
-        User testUser = new User("testuserSSS", "testuser@test.com","testpassword",
+        User testUser = new User("testuser", "testuser@test.com","testpassword",
                 "testname","testsurname","012345678910","PPP123123",
                 "testaddress","testcorrespondence");
+        testUser.setId(1L);
         userRepository.save(testUser);
         BankAccount testBankAccount = new BankAccount();
         testBankAccount.setAccountNumber("12345678911111111111111111");

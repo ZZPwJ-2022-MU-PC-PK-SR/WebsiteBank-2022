@@ -23,6 +23,7 @@ public class WithMockCustomUserTransactionSecurityContextFactory
         role.setName(EnumRole.ROLE_USER);
         String password = "password";
         User user = new User("usernamefine","user@yourdomain.com",password);
+        user.setId(1L);
         user.setRoles(new HashSet<>(Arrays.asList(role)));
         UserDetailsImpl principal = UserDetailsImpl.build(user);
         Authentication auth = new UsernamePasswordAuthenticationToken(

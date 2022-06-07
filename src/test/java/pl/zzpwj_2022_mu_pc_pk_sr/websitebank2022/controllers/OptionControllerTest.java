@@ -33,7 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
-@Import({WebSecurityConfig.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OptionControllerTest {
     @Autowired
