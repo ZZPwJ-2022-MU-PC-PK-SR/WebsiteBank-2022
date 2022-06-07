@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest
-@Import({WebSecurityConfig.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AuthorizationCompromiseCodesTest {
     @Autowired

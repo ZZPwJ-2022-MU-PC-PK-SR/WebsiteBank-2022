@@ -36,7 +36,6 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureMockMvc
 @SpringBootTest
-@Import({ WebSecurityConfig.class})
 public class PageControllerTest {
     ObjectMapper objectMapper = new ObjectMapper();
 

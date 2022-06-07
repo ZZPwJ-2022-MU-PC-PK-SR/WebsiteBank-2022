@@ -9,7 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.Transaction;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.TransactionResponse;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.TransactionHistoryRepository;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.TransactionRepository;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import java.util.List;
 public class TransactionHistoryService {
 
     @Autowired
-    private TransactionHistoryRepository repository;
+    private TransactionRepository repository;
 
     public List<Transaction> getTransactionsHistory(Long id,
                                                     Double greaterThanAmount,
@@ -38,7 +38,7 @@ public class TransactionHistoryService {
         if (greaterThanDate == null) {
             greaterThanDate = new Timestamp(0);
         }
-        return repository.findBy(
+        return repository.findByFilter(
                 id, greaterThanAmount, lowerThanAmount, greaterThanDate, lowerThanDate, pageable);
     }
 
