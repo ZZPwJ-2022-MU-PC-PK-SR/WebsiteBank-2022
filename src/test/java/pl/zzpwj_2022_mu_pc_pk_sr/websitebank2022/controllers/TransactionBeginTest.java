@@ -41,35 +41,35 @@ public class TransactionBeginTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    BankAccountRepository bankAccountRepository;
+    private BankAccountRepository bankAccountRepository;
     @Autowired
-    BankAccountTypeRepository bankAccountTypeRepository;
+    private BankAccountTypeRepository bankAccountTypeRepository;
     @Autowired
-    TransactionRepository transactionRepository;
+    private TransactionRepository transactionRepository;
     @Autowired
-    TransactionTypeRepository transactionTypeRepository;
+    private TransactionTypeRepository transactionTypeRepository;
     @Autowired
-    TransactionStatusRepository transactionStatusRepository;
+    private TransactionStatusRepository transactionStatusRepository;
     @Autowired
-    CurrencyRates currencyRates;
+    private CurrencyRates currencyRates;
     @Autowired
-    AuthorizeTransaction authorizeTransaction;
+    private AuthorizeTransaction authorizeTransaction;
     @Autowired
-    AuthorizationCodeRepository authorizationCodeRepository;
+    private AuthorizationCodeRepository authorizationCodeRepository;
 
-    String json;
-    ObjectMapper mapper = new ObjectMapper();
-    TransactionRequest request;
+    private String json;
+    private ObjectMapper mapper = new ObjectMapper();
+    private TransactionRequest request;
 
-    User user1;
-    BankAccount bankAccount1;
-    UserDetailsImpl user1Details;
-    User user2;
-    BankAccount bankAccount2;
+    private User user1;
+    private BankAccount bankAccount1;
+    private UserDetailsImpl user1Details;
+    private User user2;
+    private BankAccount bankAccount2;
 
-    AuthorizationCode code;
+    private AuthorizationCode code;
 
     @BeforeEach
     public void initializeRequest() throws NoSuchAlgorithmException {

@@ -40,11 +40,11 @@ public class AuthorizationValidateCodeTest {
     @Autowired
     private CheckCode checkCode;
 
-    AuthorizationCode firstCode;
-    AuthorizationCode secondCode;
-    AuthorizationCode lastCode;
+    private AuthorizationCode firstCode;
+    private AuthorizationCode secondCode;
+    private AuthorizationCode lastCode;
 
-    UserDetailsImpl userDetails;
+    private UserDetailsImpl userDetails;
 
     @BeforeEach
     public void validateInit() throws NoSuchAlgorithmException {

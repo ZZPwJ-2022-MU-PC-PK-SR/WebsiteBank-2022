@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 public class CurrencyRatesTest {
     @Autowired
-    CurrencyRates currencyRates;
+    private CurrencyRates currencyRates;
 
     @Test
     public void falseCurrencyThrowsAnError() {
