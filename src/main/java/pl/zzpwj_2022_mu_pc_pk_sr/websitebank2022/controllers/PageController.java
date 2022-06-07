@@ -18,13 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.*;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.TransactionRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.MessageResponse;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.TransactionResponse;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.BankAccountRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.TransactionRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.TransactionStatusRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.TransactionTypeRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.jwt.JwtUtils;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.TransactionHistoryService;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.UserDetailsImpl;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,8 +45,6 @@ public class PageController {
     TransactionTypeRepository transactionTypeRepository;
     @Autowired
     TransactionStatusRepository transactionStatusRepository;
-    @Autowired
-    TransactionHistoryService transactionHistoryService;
     @GetMapping("/user")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> userAccess(@AuthenticationPrincipal UserDetailsImpl userDetails) {
