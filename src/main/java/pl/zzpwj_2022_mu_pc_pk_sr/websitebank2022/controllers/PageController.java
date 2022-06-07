@@ -71,7 +71,7 @@ public class PageController {
             rtn.put("Imie",userDetails.getName());
             rtn.put("Nazwisko",userDetails.getName());
             for (Cards card:cards){
-                if(card.getBank_account_id().equals(bankAccount.getAccountNumber())){
+                if(card.getBankAccountId().equals(bankAccount.getAccountNumber())){
                     rtn.put("nr karty :",card.getId());
                     rtn.put("status karty :",card.getStatus());
                 }

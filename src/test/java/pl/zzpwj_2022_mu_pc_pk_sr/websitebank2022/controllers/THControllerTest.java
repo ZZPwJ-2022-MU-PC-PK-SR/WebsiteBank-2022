@@ -35,7 +35,7 @@ public class THControllerTest {
     @Autowired
     private TransactionTypeRepository transactionTypeRepository;
     @Autowired
-    private TransactionHistoryRepository thRepository;
+    private TransactionRepository transactionRepository;
     private List<TransactionResponse> transactionList;
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -75,7 +75,7 @@ public class THControllerTest {
             }
             t.setDate(date);
             transactionList.add(new TransactionResponse(t));
-            thRepository.save(t);
+            transactionRepository.save(t);
         }
     }
 
