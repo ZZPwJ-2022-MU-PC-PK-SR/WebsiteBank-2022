@@ -18,15 +18,13 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class WithMockUserPeterSecurityContextFactory implements WithSecurityContextFactory<WithMockUserPeter> {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private AuthorizationCodeRepository authorizationCodeRepository;
+public final class WithMockUserPeterSecurityContextFactory implements WithSecurityContextFactory<WithMockUserPeter> {
+
+
+
+
     @Override
     public SecurityContext createSecurityContext(WithMockUserPeter annotation) {
-        authorizationCodeRepository.deleteAll();
-        userRepository.deleteAll();
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         Role role = new Role();
         role.setId(1);
@@ -35,16 +33,10 @@ public class WithMockUserPeterSecurityContextFactory implements WithSecurityCont
         User user = new User("Alfonsy2","alfonsy@yourdomain.com","password",
                 "Alfonsy", "Barabasz", "012345678922", "PPP123124",
                 "testaddress 22", "testcorrespondence 33");
-        userRepository.save(user);
-        AuthorizationCode code = null;
-        try {
-            code = new AuthorizationCode(user,2);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        authorizationCodeRepository.save(code);
+
         user.setRoles(new HashSet<>(Arrays.asList(role)));
         UserDetailsImpl principal = UserDetailsImpl.build(user);
+        principal.setUser(user);
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 principal, null, principal.getAuthorities() );
         context.setAuthentication(auth);

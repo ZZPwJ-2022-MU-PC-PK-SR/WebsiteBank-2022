@@ -16,6 +16,7 @@ import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.mockusers.WithMockCustomUser;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.User;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.CodeGenerateRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.AuthorizationCodeRepository;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.RoleRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.UserRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.WebSecurityConfig;
 
@@ -34,6 +35,7 @@ public class AuthorizationCompromiseCodesTest {
     private UserRepository userRepository;
     @Autowired
     private AuthorizationCodeRepository authorizationCodeRepository;
+
 
     String json;
     ObjectMapper mapper = new ObjectMapper();

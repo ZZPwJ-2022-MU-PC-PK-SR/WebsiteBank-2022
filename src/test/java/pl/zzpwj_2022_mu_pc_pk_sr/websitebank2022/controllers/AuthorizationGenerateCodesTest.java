@@ -38,8 +38,8 @@ public class AuthorizationGenerateCodesTest {
     @Autowired
     private AuthorizationCodeRepository authorizationCodeRepository;
 
-    String json;
-    ObjectMapper mapper = new ObjectMapper();
+    private String json;
+    private ObjectMapper mapper = new ObjectMapper();
 
     @BeforeAll
     public void initialize() {
