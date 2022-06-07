@@ -43,7 +43,7 @@ public class THControllerTest {
     ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
-    public void init() {
+    public void initttt() {
         transactionList = new ArrayList<>();
         TransactionType testTransactionType = new TransactionType();
         testTransactionType.setId(1L);
