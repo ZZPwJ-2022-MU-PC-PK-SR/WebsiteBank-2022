@@ -50,6 +50,12 @@ public class AuthorizationGenerateCodesTest {
                 "testaddress", "testcorrespondence"));
     }
 
+    @AfterAll
+    public void end() {
+        authorizationCodeRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
     @BeforeEach
     public void generateInit() throws JsonProcessingException {
         CodeGenerateRequest request = new CodeGenerateRequest();
