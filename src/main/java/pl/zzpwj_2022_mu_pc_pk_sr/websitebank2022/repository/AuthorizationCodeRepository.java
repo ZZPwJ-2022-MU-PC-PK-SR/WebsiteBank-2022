@@ -6,6 +6,7 @@ import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.AuthorizationCode;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.User;
 
 import java.util.Set;
+
 @Repository
 public interface AuthorizationCodeRepository extends JpaRepository<AuthorizationCode,Long> {
     Boolean existsByUserAndActiveIsTrue(User user);

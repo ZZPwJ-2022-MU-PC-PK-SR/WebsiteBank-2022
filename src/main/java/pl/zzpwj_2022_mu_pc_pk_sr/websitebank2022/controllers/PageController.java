@@ -71,7 +71,7 @@ public class PageController {
             rtn.put("Imie",userDetails.getName());
             rtn.put("Nazwisko",userDetails.getName());
             for (Cards card:cards){
-                if(card.getBank_account_id().equals(bankAccount.getAccountNumber())){
+                if(card.getBankAccountId().equals(bankAccount.getAccountNumber())){
                     rtn.put("nr karty :",card.getId());
                     rtn.put("status karty :",card.getStatus());
                 }
@@ -99,7 +99,7 @@ public class PageController {
         List<BankAccount> bankAccounts = bankAccountRepository.findByUser_id(userDetails.getId()).stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
         Cards card = cardRepository.findById(blockCardRequest.getCardID()).orElseThrow(() -> new RuntimeException("No card with that card id"));
         for (BankAccount bankAccount: bankAccounts) {
-            if(bankAccount.getAccountNumber().equals(card.getBank_account_id())){
+            if(bankAccount.getAccountNumber().equals(card.getBankAccountId())){
                 if(card.getStatus().equals("inActive")){
                     card.setStatus("Active");
                 }else {

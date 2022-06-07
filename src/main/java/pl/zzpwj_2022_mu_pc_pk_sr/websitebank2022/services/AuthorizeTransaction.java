@@ -5,10 +5,13 @@ import org.hibernate.annotations.Check;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.Cards;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.TransactionType;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.CardRepository;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 @Service
@@ -16,10 +19,25 @@ import java.util.Random;
 public class AuthorizeTransaction {
     private final PasswordEncoder encoder;
     private final CheckCode checkCode;
+    private final CardRepository cardRepository;
 
     public Boolean authorizeTransaction(TransactionType type, UserDetailsImpl userDetails, String authorizationData) {
         switch(type.getName()) {
             case CARD: {
+                String[] authorizationDataSplit = authorizationData.split("#");
+                Cards card = cardRepository.findByCardNumber(encoder.encode(authorizationDataSplit[0])).orElse(null);
+                if(card==null) {
+                    return false;
+                }
+                if(card.getStatus().equals("inActive")) {
+                    return false;
+                }
+                if(card.getAccessDate().before(new Date())) {
+                    return false;
+                }
+                if(!card.getBankAccountId().equals(authorizationDataSplit[1])) {
+                    return false;
+                }
                 return true;
             }
             case DZIK: {

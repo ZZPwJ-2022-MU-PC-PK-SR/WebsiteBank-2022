@@ -54,13 +54,20 @@ public class TransactionController {
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("Fatal authentication error"));
         BankAccount from = bankAccountRepository.findByAccountNumberAndUser(request.getFrom(),user).orElseThrow(() -> new RuntimeException("No account with that number and/or user found"));
         EnumTransactionStatus status = EnumTransactionStatus.REJECTED;
-        if(!authorizeTransaction.authorizeTransaction(transactionType,userDetails,request.getAuthorizationData())) {
-            return ResponseEntity.badRequest().body(new TransactionBeginResponse(status.toString(),"Authorization failed"));
-        }
 
         if(request.getFrom().equals(request.getTo())) {
             return ResponseEntity.badRequest().body(new TransactionBeginResponse(status.toString(),"Cannot send a transfer to same account"));
         }
+
+        if(transactionType.getName()==EnumTransactionType.CARD) {
+            request.setAuthorizationData(request.getAuthorizationData()+"#"+request.getFrom());
+        }
+
+        if(!authorizeTransaction.authorizeTransaction(transactionType,userDetails,request.getAuthorizationData())) {
+            return ResponseEntity.badRequest().body(new TransactionBeginResponse(status.toString(),"Authorization failed"));
+        }
+
+
 
         double amount = Double.parseDouble(request.getAmount().replace(',','.'));
 
