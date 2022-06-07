@@ -79,7 +79,7 @@ public class TransactionBeginTest {
         userRepository.save(user1);
         user1Details = UserDetailsImpl.build(user1);
 
-        user2=new User("testuser","test@test.com","password","testname",
+        user2=new User("testuserS","test@test.com","password","testname",
                 "testsurname","100123456789","KKK321321","testaddress",
                 "testcorrespondence");
         userRepository.save(user2);
