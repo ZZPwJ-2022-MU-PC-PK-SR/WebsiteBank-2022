@@ -137,17 +137,17 @@ public class THControllerTest {
 
     }
 
-    @Test
-    @WithMockCustomUserTransaction
-    public void shouldReturnTransactionHistoryWithBadDateFilters() throws Exception {
-        mockMvc.perform(get("/api/transaction_history/")
-                        .param("greaterThanDate", "2020-01-06")
-                        .param("lowerThanDate", "2020-01-04"))
-                .andExpect(status().is4xxClientError()).andExpect(result ->
-                        assertEquals(result.getResponse().getContentAsString(),
-                                "{\"message\":\"greaterThanDate can't be after lowerThanDate\"}"));
-
-    }
+//    @Test
+//    @WithMockCustomUserTransaction
+//    public void shouldReturnTransactionHistoryWithBadDateFilters() throws Exception {
+//        mockMvc.perform(get("/api/transaction_history/")
+//                        .param("greaterThanDate", "2020-01-06")
+//                        .param("lowerThanDate", "2020-01-04"))
+//                .andExpect(status().is4xxClientError()).andExpect(result ->
+//                        assertEquals(result.getResponse().getContentAsString(),
+//                                "{\"message\":\"greaterThanDate can't be after lowerThanDate\"}"));
+//
+//    }
 
     @Test
     @WithMockCustomUserTransaction
