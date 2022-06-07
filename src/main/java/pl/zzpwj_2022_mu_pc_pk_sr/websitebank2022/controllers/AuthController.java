@@ -81,17 +81,9 @@ public class AuthController {
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
             roles.add(userRole);
         } else {
-            strRoles.forEach(role->{
-                if ("admin".equals(role)) {
-                    Role adminRole = roleRepository.findByName(EnumRole.ROLE_ADMIN)
-                            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                    roles.add(adminRole);
-                } else {
-                    Role userRole = roleRepository.findByName(EnumRole.ROLE_USER)
-                            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                    roles.add(userRole);
-                }
-            });
+            Role userRole = roleRepository.findByName(EnumRole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(userRole);
         }
         BankAccountType bankAccountType = bankAccountTypeRepository.findById(1L).orElseThrow(() -> new RuntimeException("Error: Bank Account Type is not found."));
         user.setRoles(roles);
