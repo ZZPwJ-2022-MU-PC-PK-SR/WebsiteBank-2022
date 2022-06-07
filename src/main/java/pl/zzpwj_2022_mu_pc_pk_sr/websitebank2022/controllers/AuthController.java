@@ -18,15 +18,14 @@ import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.LoginRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.SingupRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.JwtResponse;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.MessageResponse;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.BankAccountRepository;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.BankAccountTypeRepository;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.RoleRepository;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.UserRepository;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.*;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.WebSecurityConfig;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.jwt.JwtUtils;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.UserDetailsImpl;
 
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,6 +34,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/auth")
 @Import(WebSecurityConfig.class)
 public class AuthController {
+    @Autowired
+    CardRepository cardRepository;
     @Autowired
     BankAccountTypeRepository bankAccountTypeRepository;
     @Autowired
@@ -94,6 +95,7 @@ public class AuthController {
             });
         }
         BankAccountType bankAccountType = bankAccountTypeRepository.findById(1L).orElseThrow(() -> new RuntimeException("Error: Bank Account Type is not found."));
+
         user.setRoles(roles);
         userRepository.save(user);
         user = userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new RuntimeException("Error: User is not found."));
@@ -103,7 +105,20 @@ public class AuthController {
             accountNumber += String.valueOf(rand);
 
         }
+        String cardNUmber = "";
+        for(int i = 0 ; i < 12; i++){
+            int rand = (new Random().nextInt(10));
+            cardNUmber += String.valueOf(rand);
+
+        }
+        Date date = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.YEAR,2);
+        Date newDate = c.getTime();
         BankAccount bankAccount = new BankAccount(bankAccountType,user,1000, accountNumber);
+        Card card = new Card(accountNumber,newDate,"active",encoder.encode(cardNUmber));
+        cardRepository.save(card);
         bankAccountRepository.save(bankAccount);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }

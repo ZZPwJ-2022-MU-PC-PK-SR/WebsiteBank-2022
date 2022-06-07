@@ -40,7 +40,7 @@ import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.WebSecurityConfig;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.TransactionHistoryService;
 
 import javax.transaction.Transactional;
-import java.sql.SQLOutput;
+//import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -110,7 +110,7 @@ public class PageControllerTest {
     @Test
     @WithMockCustomAdmin
     public void shouldAllowAccessToDashboardToAuthorizedAdminCheckMessage() throws Exception{
-        mockMvc.perform(get("/api/logged/dashboard")).andExpect(status().isOk()).andExpect(result -> assertEquals(result.getResponse().getContentAsString(), "{\"message\":\"adminadmin\\n Imie : null\\n Nazwisko : null\\n Numer karty : null\\n\"}"));
+        mockMvc.perform(get("/api/logged/dashboard")).andExpect(status().isOk()).andExpect(result -> assertEquals(result.getResponse().getContentAsString(), "[]"));
     }
 
 }

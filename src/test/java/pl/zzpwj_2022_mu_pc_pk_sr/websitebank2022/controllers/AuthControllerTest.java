@@ -17,10 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.*;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.LoginRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.SingupRequest;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.BankAccountRepository;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.BankAccountTypeRepository;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.RoleRepository;
-import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.UserRepository;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.*;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.WebSecurityConfig;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.jwt.JwtUtils;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.UserDetailsImpl;
@@ -39,7 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(WebSecurityConfig.class)
 public class AuthControllerTest {
 
-
+    @Mock
+    private CardRepository cardRepository;
     @Mock
     private UserRepository userRepository;
     @Mock
@@ -120,6 +118,7 @@ public class AuthControllerTest {
         when(userRepository.save(any())).thenReturn(new User());
         when(passwordEncoder.encode(anyString())).thenReturn("password");
         when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
+        when(cardRepository.save(any())).thenReturn(new Card());
         String json  = new ObjectMapper().writeValueAsString(singupRequest);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/singup").content(json).contentType(MediaType.APPLICATION_JSON)
