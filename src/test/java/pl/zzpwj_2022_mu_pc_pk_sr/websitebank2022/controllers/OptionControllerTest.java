@@ -1,10 +1,8 @@
 package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.After;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,6 +49,13 @@ public class OptionControllerTest {
         role.setId(1);
         role.setName(EnumRole.ROLE_USER);
         roleRepository.save(role);
+    }
+
+    @AfterAll
+    public void end() {
+        authorizationCodeRepository.deleteAll();
+        userRepository.deleteAll();
+        roleRepository.deleteAll();
     }
 
     @BeforeEach

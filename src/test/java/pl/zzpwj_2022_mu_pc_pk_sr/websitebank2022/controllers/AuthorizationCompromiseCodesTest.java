@@ -48,6 +48,12 @@ public class AuthorizationCompromiseCodesTest {
                 "testaddress", "testcorrespondence"));
     }
 
+    @AfterAll
+    public void end() {
+        authorizationCodeRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
     @BeforeEach
     public void compromiseInit() throws Exception {
         CodeGenerateRequest request = new CodeGenerateRequest();
