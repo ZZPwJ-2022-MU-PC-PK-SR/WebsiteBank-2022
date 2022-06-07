@@ -75,10 +75,8 @@ public class PageController {
     public ResponseEntity<?> dashboard(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<BankAccount> bankAccounts = bankAccountRepository.findByUser_id(userDetails.getId()).stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
         String msg="";
-
         ArrayList<Map<String,Object>> list = new ArrayList<>();
         for (BankAccount bankAccount: bankAccounts) {
-
             Map<String, Object> rtn = new LinkedHashMap<>();
             rtn.put("Stan konta",bankAccount.getMoney());
             rtn.put("Nr konta",bankAccount.getAccountNumber());
@@ -132,7 +130,6 @@ public class PageController {
         for(int i = 0 ; i < 12; i++){
             int rand = (new Random().nextInt(10));
             cardNUmber += String.valueOf(rand);
-
         }
         Date date = new Date();
         Calendar c = Calendar.getInstance();
@@ -147,7 +144,7 @@ public class PageController {
                 return ResponseEntity.ok("Operation finished Correctly");
             }
         }
-        return ResponseEntity.ok("Operation finished inCorrectly");
+        return (ResponseEntity<?>) ResponseEntity.badRequest();
     }
 
 

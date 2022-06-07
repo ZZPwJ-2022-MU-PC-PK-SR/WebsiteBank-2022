@@ -55,7 +55,7 @@ public class THControllerTest {
         testUser.setId(1L);
         userRepository.save(testUser);
         BankAccount testBankAccount = new BankAccount();
-        testBankAccount.setAccountNumber(String.valueOf(12345678));
+        testBankAccount.setAccountNumber("12345678911111111111111111");
         testBankAccount.setUser(testUser);
         bankAccountRepository.save(testBankAccount);
         for (long i = 1; i < 10; i++) {

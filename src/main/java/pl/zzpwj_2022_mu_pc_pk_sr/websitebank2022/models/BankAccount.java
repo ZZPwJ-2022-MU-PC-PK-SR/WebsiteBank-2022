@@ -2,6 +2,7 @@ package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "bank_accounts")
@@ -22,6 +23,7 @@ public class BankAccount {
     @Column(name = "money")
     private double money;
 
+    @Pattern(regexp="^\\d{26}$")
     @Column(name = "account_number")
     private String accountNumber;
 

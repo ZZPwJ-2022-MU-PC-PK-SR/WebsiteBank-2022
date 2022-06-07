@@ -13,17 +13,13 @@ public class BankAccountType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
-    @Size(max = 30)
+
     private double interest;
-    @NotBlank
-    @Size(max = 60)
+
     private double transfer_cost_min;
-    @NotBlank
-    @Size(max = 60)
+
     private double transfer_cost_interest;
-    @NotBlank
-    @Size(max = 60)
+
     private String name;
 
 
