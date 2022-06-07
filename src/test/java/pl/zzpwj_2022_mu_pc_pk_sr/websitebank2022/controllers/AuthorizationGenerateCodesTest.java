@@ -38,11 +38,12 @@ public class AuthorizationGenerateCodesTest {
     @Autowired
     private AuthorizationCodeRepository authorizationCodeRepository;
 
-    String json;
-    ObjectMapper mapper = new ObjectMapper();
+    private String json;
+    private ObjectMapper mapper = new ObjectMapper();
 
     @BeforeAll
     public void initialize() {
+        authorizationCodeRepository.deleteAll();
         userRepository.deleteAll();
         userRepository.save(new User("usernamefine","user@yourdomain.com","password",
                 "testname", "testsurname", "012345678910", "PPP123123",

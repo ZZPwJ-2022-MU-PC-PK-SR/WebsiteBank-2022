@@ -1,6 +1,7 @@
 package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.annotations.EnumValidator;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.EnumTransactionType;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class TransactionRequest {
     @NotBlank
     @EnumValidator(
@@ -32,7 +34,10 @@ public class TransactionRequest {
     @NotBlank
     @Pattern(regexp="^[1-9][0-9]{0,7}[.,][0-9]{2}$")
     private String amount;
-    @Pattern(regexp="^[A-Z]{3}$")
+    @Pattern(regexp="^([A-Z]{3}|)$")
     private String currencyCode;
+    @NotBlank
+    @Size(min=4)
+    private String authorizationData;
 
 }

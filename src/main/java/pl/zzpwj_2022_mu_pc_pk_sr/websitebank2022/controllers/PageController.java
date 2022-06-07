@@ -3,6 +3,7 @@ package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.util.json.JSONParser;
@@ -41,23 +42,18 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/api/logged")
 @Log4j2
+@RequiredArgsConstructor
 public class PageController {
-    @Autowired
-    CheckCode checkCode;
-    @Autowired
-    CardRepository cardRepository;
-    @Autowired
-    BankAccountRepository bankAccountRepository;
-    @Autowired
-    BankAccountTypeRepository bankAccountTypeRepository;
-    @Autowired
-    TransactionRepository transactionRepository;
-    @Autowired
-    TransactionTypeRepository transactionTypeRepository;
-    @Autowired
-    TransactionStatusRepository transactionStatusRepository;
-    @Autowired
-    PasswordEncoder encoder;
+    private final CheckCode checkCode;
+    private final CardRepository cardRepository;
+    private final PasswordEncoder encoder;
+  
+    private final BankAccountTypeRepository bankAccountTypeRepository;
+    private final BankAccountRepository bankAccountRepository;
+    private final TransactionRepository transactionRepository;
+    private final TransactionTypeRepository transactionTypeRepository;
+    private final TransactionStatusRepository transactionStatusRepository;
+  
     @GetMapping("/user")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> userAccess(@AuthenticationPrincipal UserDetailsImpl userDetails) {

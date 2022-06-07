@@ -1,6 +1,7 @@
 package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.controllers;
 
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.coyote.Response;
 import org.aspectj.bridge.Message;
@@ -30,11 +31,12 @@ import java.util.*;
 @Controller
 @RequestMapping("/api/authcodes")
 @Log4j2
+@RequiredArgsConstructor
 public class AuthorizationCodeController {
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    AuthorizationCodeRepository authorizationCodeRepository;
+
+    private final UserRepository userRepository;
+
+    private final AuthorizationCodeRepository authorizationCodeRepository;
 
     @PostMapping("/generate_codes")
     @PreAuthorize("hasRole('ADMIN')")
