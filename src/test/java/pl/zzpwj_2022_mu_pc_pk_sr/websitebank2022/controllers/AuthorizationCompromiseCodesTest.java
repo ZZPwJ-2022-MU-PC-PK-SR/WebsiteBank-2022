@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.util.NestedServletException;
@@ -26,8 +27,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest
-@Import({WebSecurityConfig.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DirtiesContext
 public class AuthorizationCompromiseCodesTest {
     @Autowired
     private MockMvc mockMvc;
@@ -42,17 +43,9 @@ public class AuthorizationCompromiseCodesTest {
 
     @BeforeAll
     public void initialize() {
-        authorizationCodeRepository.deleteAll();
-        userRepository.deleteAll();
         userRepository.save(new User("usernamefine","user@yourdomain.com","password",
                 "testname", "testsurname", "012345678910", "PPP123123",
                 "testaddress", "testcorrespondence"));
-    }
-
-    @AfterAll
-    public void end() {
-        authorizationCodeRepository.deleteAll();
-        userRepository.deleteAll();
     }
 
     @BeforeEach
@@ -123,9 +116,4 @@ public class AuthorizationCompromiseCodesTest {
         }
     }
 
-    @AfterAll
-    public void clearTables() {
-        authorizationCodeRepository.deleteAll();
-        userRepository.deleteAll();
-    }
 }

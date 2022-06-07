@@ -43,7 +43,6 @@ public class AuthorizationGenerateCodesTest {
 
     @BeforeAll
     public void initialize() {
-        authorizationCodeRepository.deleteAll();
         userRepository.deleteAll();
         userRepository.save(new User("usernamefine","user@yourdomain.com","password",
                 "testname", "testsurname", "012345678910", "PPP123123",
