@@ -33,6 +33,7 @@ public class PageController {
     private final CheckCode checkCode;
     private final CardRepository cardRepository;
     private final PasswordEncoder encoder;
+
   
     private final BankAccountTypeRepository bankAccountTypeRepository;
     private final BankAccountRepository bankAccountRepository;
@@ -56,16 +57,25 @@ public class PageController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> dashboard(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<BankAccount> bankAccounts = bankAccountRepository.findByUser_id(userDetails.getId()).stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
+
         String msg="";
         ArrayList<Map<String,Object>> list = new ArrayList<>();
         for (BankAccount bankAccount: bankAccounts) {
             Map<String, Object> rtn = new LinkedHashMap<>();
+            List<Cards> cards = cardRepository.findAll();
+           //List<Cards> cards = cardRepository.findAllByBank_account_id(bankAccount.getAccountNumber()).stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
             rtn.put("Stan konta",bankAccount.getMoney());
             rtn.put("Nr konta",bankAccount.getAccountNumber());
-            rtn.put("Oprocentowanie",bankAccount.getBankAccountType().getInterest());
+            rtn.put("Oprocentowanie",bankAccount.getBankAccountType().getInterest()+" %");
             rtn.put("Typ rachunku",bankAccount.getBankAccountType().getName());
             rtn.put("Imie",userDetails.getName());
             rtn.put("Nazwisko",userDetails.getName());
+            for (Cards card:cards){
+                if(card.getBank_account_id().equals(bankAccount.getAccountNumber())){
+                    rtn.put("nr karty :",card.getId());
+                    rtn.put("status karty :",card.getStatus());
+                }
+            }
             list.add(rtn);
             msg+="Stan konta : "+bankAccount.getMoney()+"\n Oprocentowanie : "+bankAccount.getBankAccountType().getInterest()+"\n Typ rachunku :"+bankAccount.getBankAccountType().getName();
         }
@@ -75,7 +85,7 @@ public class PageController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> account_percentage_money(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody AccountRequest accountRequest) {
         BankAccount bankAccount = bankAccountRepository.findByAccountNumber(accountRequest.getAccountNumber()).orElseThrow(() -> new RuntimeException("No account number with that account"));
-        bankAccount.setMoney((bankAccount.getMoney()*bankAccount.getBankAccountType().getInterest())+ bankAccount.getMoney());
+        bankAccount.setMoney((bankAccount.getMoney()*bankAccount.getBankAccountType().getInterest()/100)+ bankAccount.getMoney());
         bankAccountRepository.save(bankAccount);
         return ResponseEntity.ok("Operation finished correctly");
     }
@@ -121,7 +131,7 @@ public class PageController {
         List<BankAccount> bankAccounts = bankAccountRepository.findByUser_id(userDetails.getId()).stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
         for (BankAccount bankAccount: bankAccounts) {
             if(bankAccount.getUser().getId().equals(userDetails.getId())){
-                Cards card = new Cards(bankAccount.getAccountNumber(),newDate,"active",encoder.encode(cardNUmber));
+                Cards card = new Cards(bankAccount.getAccountNumber(),newDate,"Active",encoder.encode(cardNUmber));
                 cardRepository.save(card);
                 return ResponseEntity.ok("Operation finished Correctly");
             }
