@@ -119,58 +119,58 @@ public class TransactionBeginTest {
 
 
     }
-//
-//    @Test
-//    @WithMockCustomUser
-//    public void fromNotFoundInDatabaseThrowsException() throws Exception {
-//        request.setFrom("12345678901234567890654321");
-//        json = new ObjectMapper().writeValueAsString(request);
-//        try {
-//            mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions/transaction_begin").content(json)
-//                    .contentType(MediaType.APPLICATION_JSON));
-//        } catch(NestedServletException ex) {
-//            assertInstanceOf(RuntimeException.class, ex.getCause());
-//            assertEquals("No account with that number and/or user found",ex.getCause().getMessage());
-//        }
-//    }
-//
-//    @Test
-//    @WithMockCustomUser
-//    public void fromUsedFromDifferentUserThrowsException() throws Exception {
-//        request.setFrom("01010101010101010101010101");
-//        json = new ObjectMapper().writeValueAsString(request);
-//        try {
-//            mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions/transaction_begin").content(json)
-//                    .contentType(MediaType.APPLICATION_JSON));
-//        } catch(NestedServletException ex) {
-//            assertInstanceOf(RuntimeException.class, ex.getCause());
-//            assertEquals("No account with that number and/or user found",ex.getCause().getMessage());
-//        }
-//    }
-//
-//    @Test
-//    @WithMockCustomUser
-//    public void wronglyAuthorizedTransactionIsInvalid() throws Exception {
-//        request.setAuthorizationData(new StringBuilder().append(code.getCode()).reverse().toString());
-//        json = new ObjectMapper().writeValueAsString(request);
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions/transaction_begin").content(json)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(result -> assertEquals("Authorization failed", mapper.readValue(result.getResponse().getContentAsString(), Map.class).get("message")))
-//                .andExpect(result -> assertEquals(400, result.getResponse().getStatus()))
-//                .andExpect(result -> assertEquals("REJECTED",mapper.readValue(result.getResponse().getContentAsString(), Map.class).get("status")));
-//    }
-//
-//    @Test
-//    @WithMockCustomUser
-//    public void toEqualsFromThrowsExceptionIsInvalid() throws Exception {
-//        request.setTo(request.getFrom());
-//        json = new ObjectMapper().writeValueAsString(request);
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions/transaction_begin").content(json)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(result -> assertEquals("Cannot send a transfer to same account", mapper.readValue(result.getResponse().getContentAsString(), Map.class).get("message")))
-//                .andExpect(result -> assertEquals(400, result.getResponse().getStatus()))
-//                .andExpect(result -> assertEquals("REJECTED",mapper.readValue(result.getResponse().getContentAsString(), Map.class).get("status")));
-//    }
+
+    @Test
+    @WithMockCustomUser
+    public void fromNotFoundInDatabaseThrowsException() throws Exception {
+        request.setFrom("12345678901234567890654321");
+        json = new ObjectMapper().writeValueAsString(request);
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions/transaction_begin").content(json)
+                    .contentType(MediaType.APPLICATION_JSON));
+        } catch(NestedServletException ex) {
+            assertInstanceOf(RuntimeException.class, ex.getCause());
+            assertEquals("No account with that number and/or user found",ex.getCause().getMessage());
+        }
+    }
+
+    @Test
+    @WithMockCustomUser
+    public void fromUsedFromDifferentUserThrowsException() throws Exception {
+        request.setFrom("01010101010101010101010101");
+        json = new ObjectMapper().writeValueAsString(request);
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions/transaction_begin").content(json)
+                    .contentType(MediaType.APPLICATION_JSON));
+        } catch(NestedServletException ex) {
+            assertInstanceOf(RuntimeException.class, ex.getCause());
+            assertEquals("No account with that number and/or user found",ex.getCause().getMessage());
+        }
+    }
+
+    @Test
+    @WithMockCustomUser
+    public void wronglyAuthorizedTransactionIsInvalid() throws Exception {
+        request.setAuthorizationData(new StringBuilder().append(code.getCode()).reverse().toString());
+        json = new ObjectMapper().writeValueAsString(request);
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions/transaction_begin").content(json)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(result -> assertEquals("Authorization failed", mapper.readValue(result.getResponse().getContentAsString(), Map.class).get("message")))
+                .andExpect(result -> assertEquals(400, result.getResponse().getStatus()))
+                .andExpect(result -> assertEquals("REJECTED",mapper.readValue(result.getResponse().getContentAsString(), Map.class).get("status")));
+    }
+
+    @Test
+    @WithMockCustomUser
+    public void toEqualsFromThrowsExceptionIsInvalid() throws Exception {
+        request.setTo(request.getFrom());
+        json = new ObjectMapper().writeValueAsString(request);
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions/transaction_begin").content(json)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(result -> assertEquals("Cannot send a transfer to same account", mapper.readValue(result.getResponse().getContentAsString(), Map.class).get("message")))
+                .andExpect(result -> assertEquals(400, result.getResponse().getStatus()))
+                .andExpect(result -> assertEquals("REJECTED",mapper.readValue(result.getResponse().getContentAsString(), Map.class).get("status")));
+    }
 
     @Test
     @WithMockCustomUser
