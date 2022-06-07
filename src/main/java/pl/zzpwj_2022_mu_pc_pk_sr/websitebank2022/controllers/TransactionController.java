@@ -2,6 +2,7 @@ package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.controllers;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.aspectj.bridge.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,21 +33,19 @@ import java.util.Set;
 @Controller
 @RequestMapping("/api/transactions")
 @Log4j2
+@RequiredArgsConstructor
 public class TransactionController {
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    BankAccountRepository bankAccountRepository;
-    @Autowired
-    TransactionRepository transactionRepository;
-    @Autowired
-    TransactionTypeRepository transactionTypeRepository;
-    @Autowired
-    TransactionStatusRepository transactionStatusRepository;
-    @Autowired
-    CurrencyRates currencyRates;
-    @Autowired
-    AuthorizeTransaction authorizeTransaction;
+    private final UserRepository userRepository;
+
+    private final BankAccountRepository bankAccountRepository;
+
+    private final TransactionRepository transactionRepository;
+
+    private final TransactionTypeRepository transactionTypeRepository;
+    private final TransactionStatusRepository transactionStatusRepository;
+ 
+    private final CurrencyRates currencyRates;
+    private final AuthorizeTransaction authorizeTransaction;
 
     @PostMapping("/transaction_begin")
     @PreAuthorize("hasRole('USER')")

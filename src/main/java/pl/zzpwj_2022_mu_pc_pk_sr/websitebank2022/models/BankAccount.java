@@ -1,12 +1,15 @@
 package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models;
 
-
 import org.hibernate.validator.constraints.Currency;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "bank_accounts")
+@Getter
+@Setter
 public class BankAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,38 +40,6 @@ public class BankAccount {
 
     public BankAccount() {
 
-    }
-
-    public BankAccountType getBankAccountType() {
-        return bankAccountType;
-    }
-
-    public void setBankAccountType(BankAccountType bankAccountType) {
-        this.bankAccountType = bankAccountType;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public double getMoney() {
-        return money;
-    }
-
-    public void setMoney(double money) {
-        this.money = money;
-    }
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(String account_number) {
-        this.accountNumber = account_number;
     }
 
 }

@@ -1,5 +1,6 @@
 package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.controllers;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -25,10 +26,10 @@ import java.util.List;
 @Controller
 @RequestMapping("/api/transaction_history")
 @Log4j2
+@RequiredArgsConstructor
 public class TransactionHistoryController {
 
-    @Autowired
-    TransactionHistoryService transactionHistoryService;
+    private final TransactionHistoryService transactionHistoryService;
 
     @GetMapping("/")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
