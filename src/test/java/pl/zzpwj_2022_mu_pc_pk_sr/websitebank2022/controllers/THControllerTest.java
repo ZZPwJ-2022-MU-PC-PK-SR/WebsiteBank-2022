@@ -54,7 +54,6 @@ public class THControllerTest {
         User testUser = new User("testuserSSS", "testuser@test.com","testpassword",
                 "testname","testsurname","012345678910","PPP123123",
                 "testaddress","testcorrespondence");
-        testUser.setId(1L);
         userRepository.save(testUser);
         BankAccount testBankAccount = new BankAccount();
         testBankAccount.setAccountNumber("12345678911111111111111111");
