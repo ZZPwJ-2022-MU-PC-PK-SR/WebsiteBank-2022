@@ -14,6 +14,7 @@ import java.util.Optional;
 public interface BankAccountRepository extends JpaRepository<BankAccount,Long> {
     @Query("select b from BankAccount b where b.user.id = ?1")
     List<Optional<BankAccount>> findByUser_id(Long id);
+    Optional<BankAccount> findByAccountNumber(String accountNumber);
     Optional<BankAccount> findByAccountNumberAndUser(String accountNumber, User user);
     Boolean existsBankAccountByAccountNumber(String accountNumber);
 
