@@ -1,6 +1,8 @@
 package pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models;
 
 
+import org.hibernate.validator.constraints.Currency;
+
 import javax.persistence.*;
 
 @Entity
