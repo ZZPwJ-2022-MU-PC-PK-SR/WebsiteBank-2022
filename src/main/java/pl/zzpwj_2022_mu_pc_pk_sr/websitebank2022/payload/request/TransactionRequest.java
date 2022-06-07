@@ -30,7 +30,9 @@ public class TransactionRequest {
     @Size(max = 140)
     private String transferTitle;
     @NotBlank
-    @Pattern(regexp="[1-9][0-9]{0,7}[,][0-9]{2}")
+    @Pattern(regexp="^[1-9][0-9]{0,7}[.,][0-9]{2}$")
     private String amount;
+    @Pattern(regexp="^[A-Z]{3}$")
+    private String currencyCode;
 
 }

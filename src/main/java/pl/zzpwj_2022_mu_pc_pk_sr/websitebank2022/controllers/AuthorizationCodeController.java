@@ -7,6 +7,7 @@ import org.aspectj.bridge.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.AuthorizationCode;
@@ -18,6 +19,7 @@ import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.CodesResponse;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.MessageResponse;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.AuthorizationCodeRepository;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.UserRepository;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.services.UserDetailsImpl;
 
 import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
@@ -67,30 +69,4 @@ public class AuthorizationCodeController {
         }
     }
 
-    @PreAuthorize("hasRole('USER')")
-    @PostMapping("/validate_code")
-    public ResponseEntity<?> checkCode(@Valid @RequestBody CodeValidateRequest request, Principal principal) {
-        User user = userRepository.findByUsername(principal.getName()).orElseThrow(() -> new RuntimeException("No user with such username found"));
-        boolean response = authorizationCodeRepository.existsByUserAndActiveIsTrue(user);
-        if(response) {
-            AuthorizationCode code = authorizationCodeRepository.findTopByActiveTrueAndUserOrderByOrderNo(user);
-            if(code.getCode().equals(request.getCode())) {
-                code.setActive(false);
-                authorizationCodeRepository.save(code);
-            } else {
-                response=false;
-            }
-        }
-        return ResponseEntity.ok().body(new BooleanResponse(response));
-
-    }
-
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping("test")
-    public ResponseEntity<?> testTest(Principal principal) {
-        CodeValidateRequest req = new CodeValidateRequest();
-        req.setCode("4026");
-        ResponseEntity<?> resp = checkCode(req,principal);
-        return ResponseEntity.ok().body(resp.getBody());
-    }
 }
