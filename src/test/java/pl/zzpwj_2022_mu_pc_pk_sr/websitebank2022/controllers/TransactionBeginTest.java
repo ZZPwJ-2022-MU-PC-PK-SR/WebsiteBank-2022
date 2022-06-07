@@ -34,8 +34,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest
-@Import({WebSecurityConfig.class})
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+//@Import({WebSecurityConfig.class})
+//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class TransactionBeginTest {
     @Autowired
@@ -196,7 +196,7 @@ public class TransactionBeginTest {
                 .andExpect(result -> assertEquals(400, result.getResponse().getStatus()))
                 .andExpect(result -> assertEquals("REJECTED",mapper.readValue(result.getResponse().getContentAsString(), Map.class).get("status")));
     }
-    
+
     @Test
     @WithMockCustomUser
     public void internalTransactionWorks() throws Exception {

@@ -25,8 +25,7 @@ public class BankAccountType {
     private double transfer_cost_min;
     @NotNull
     private double transfer_cost_interest;
-    @NotBlank
-    @Size(max = 60)
+
     private String name;
 
 

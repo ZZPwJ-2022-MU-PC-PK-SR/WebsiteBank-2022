@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "bank_accounts")
@@ -27,6 +28,7 @@ public class BankAccount {
     @Column(name = "money")
     private double money;
 
+    @Pattern(regexp="^\\d{26}$")
     @Column(name = "account_number")
     private String accountNumber;
 
