@@ -83,14 +83,14 @@ public class THControllerTest {
     @Test
     @WithMockCustomUserTransaction
     public void shouldReturnStatusOkForTransactionHistory() throws Exception {
-        mockMvc.perform(get("/api/logged/get_history")).andExpect(status().isOk());
+        mockMvc.perform(get("/api/transaction_history/")).andExpect(status().isOk());
     }
 
     @Test
     @WithMockCustomUserTransaction
     public void shouldReturnTransactionHistoryWithSorting() throws Exception {
         transactionList.sort(Comparator.comparing(TransactionResponse::getDate).reversed());
-        mockMvc.perform(get("/api/logged/get_history")
+        mockMvc.perform(get("/api/transaction_history/")
                         .param("sortList", "date")
                         .param("sortOrder", "DESC"))
                 .andExpect(status().isOk()).andExpect(result -> assertEquals(result.getResponse().getContentAsString(),
@@ -106,7 +106,7 @@ public class THControllerTest {
                 ((TransactionResponse) o).getAmount() >= 1002 &&
                 ((TransactionResponse) o).getAmount() <= 1006 &&
                 ((TransactionResponse) o).getDate().matches("2020-01-0[2-4]"));
-        mockMvc.perform(get("/api/logged/get_history")
+        mockMvc.perform(get("/api/transaction_history/")
                         .param("greaterThanAmount", "1002")
                         .param("lowerThanAmount", "1006")
                         .param("greaterThanDate", "2020-01-02")
@@ -121,7 +121,7 @@ public class THControllerTest {
     @Test
     @WithMockCustomUserTransaction
     public void shouldReturnTransactionHistoryWithBadAmountFilters() throws Exception {
-        mockMvc.perform(get("/api/logged/get_history")
+        mockMvc.perform(get("/api/transaction_history/")
                         .param("greaterThanAmount", "1004")
                         .param("lowerThanAmount", "1003"))
                 .andExpect(status().is4xxClientError()).andExpect(result ->
@@ -133,7 +133,7 @@ public class THControllerTest {
     @Test
     @WithMockCustomUserTransaction
     public void shouldReturnTransactionHistoryWithBadDateFilters() throws Exception {
-        mockMvc.perform(get("/api/logged/get_history")
+        mockMvc.perform(get("/api/transaction_history/")
                         .param("greaterThanDate", "2020-01-06")
                         .param("lowerThanDate", "2020-01-04"))
                 .andExpect(status().is4xxClientError()).andExpect(result ->
@@ -146,7 +146,7 @@ public class THControllerTest {
     @WithMockCustomUserTransaction
     public void shouldReturnTransactionHistoryWithPagination() throws Exception {
         transactionList.sort(Comparator.comparing(TransactionResponse::getAmount));
-        mockMvc.perform(get("/api/logged/get_history")
+        mockMvc.perform(get("/api/transaction_history/")
                             .param("page", "0")
                             .param("size", "3")
                             .param("sortList", "amount")
@@ -154,7 +154,7 @@ public class THControllerTest {
                     .andExpect(status().isOk()).andExpect(result -> assertEquals(result.getResponse().getContentAsString(),
                             objectMapper.writeValueAsString(transactionList
                                     .subList(0, 3))));
-        mockMvc.perform(get("/api/logged/get_history")
+        mockMvc.perform(get("/api/transaction_history/")
                             .param("page", "1")
                             .param("size", "3")
                             .param("sortList", "amount")
