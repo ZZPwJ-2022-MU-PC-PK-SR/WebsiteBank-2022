@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -51,6 +52,8 @@ public class AuthorizeCardsTransactionTest {
     private BankAccountRepository bankAccountRepository;
     @Autowired
     private CardRepository cardRepository;
+    @Autowired
+    private PasswordEncoder encoder;
 
 
     User user1;
@@ -78,29 +81,34 @@ public class AuthorizeCardsTransactionTest {
 
     @Test
     public void missingCardReturnsFalse() throws ParseException {
-        card = new Cards("12345678901234567890123456",new SimpleDateFormat("yyyy-MM-dd").parse("2040-01-01"),"Active","123412341234");
-        assertFalse(authorizeTransaction.authorizeTransaction(type,user1Details,"432143214321"));
+        card = new Cards("12345678901234567890123456",new SimpleDateFormat("yyyy-MM-dd").parse("2040-01-01"),"Active",encoder.encode("123412341234"));
+        cardRepository.save(card);
+        assertFalse(authorizeTransaction.authorizeTransaction(type,user1Details,"432143214321#12345678901234567890123456"));
     }
     @Test
     public void wrongAccountNumberReturnsFalse() throws ParseException {
-        card = new Cards("11111111111111111111111111",new SimpleDateFormat("yyyy-MM-dd").parse("2040-01-01"),"Active","123412341234");
-        assertFalse(authorizeTransaction.authorizeTransaction(type,user1Details,"123412341234"));
+        card = new Cards("11111111111111111111111111",new SimpleDateFormat("yyyy-MM-dd").parse("2040-01-01"),"Active",encoder.encode("123412341234"));
+        cardRepository.save(card);
+        assertFalse(authorizeTransaction.authorizeTransaction(type,user1Details,"123412341234#12345678901234567890123456"));
     }
     @Test
     public void cardInActiveReturnsFalse() throws ParseException {
-        card = new Cards("11111111111111111111111111",new SimpleDateFormat("yyyy-MM-dd").parse("2040-01-01"),"inActive","123412341234");
-        assertFalse(authorizeTransaction.authorizeTransaction(type,user1Details,"123412341234"));
+        card = new Cards("12345678901234567890123456",new SimpleDateFormat("yyyy-MM-dd").parse("2040-01-01"),"inActive",encoder.encode("123412341234"));
+        cardRepository.save(card);
+        assertFalse(authorizeTransaction.authorizeTransaction(type,user1Details,"123412341234#12345678901234567890123456"));
     }
 
     @Test
     public void cardExpiredReturnsFalse() throws ParseException {
-        card = new Cards("11111111111111111111111111",new SimpleDateFormat("yyyy-MM-dd").parse("2015-01-01"),"Active","123412341234");
-        assertFalse(authorizeTransaction.authorizeTransaction(type,user1Details,"123412341234"));
+        card = new Cards("12345678901234567890123456",new SimpleDateFormat("yyyy-MM-dd").parse("2015-01-01"),"Active",encoder.encode("123412341234"));
+        cardRepository.save(card);
+        assertFalse(authorizeTransaction.authorizeTransaction(type,user1Details,"123412341234#12345678901234567890123456"));
     }
 
     @Test
     public void correctCardReturnsTrue() throws ParseException {
-        card = new Cards("11111111111111111111111111",new SimpleDateFormat("yyyy-MM-dd").parse("2040-01-01"),"Active","123412341234");
-        assertFalse(authorizeTransaction.authorizeTransaction(type,user1Details,"123412341234"));
+        card = new Cards("12345678901234567890123456",new SimpleDateFormat("yyyy-MM-dd").parse("2040-01-01"),"Active",encoder.encode("123412341234"));
+        cardRepository.save(card);
+        assertTrue(authorizeTransaction.authorizeTransaction(type,user1Details,"123412341234#12345678901234567890123456"));
     }
 }

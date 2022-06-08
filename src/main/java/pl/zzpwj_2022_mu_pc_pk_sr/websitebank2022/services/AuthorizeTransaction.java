@@ -12,6 +12,7 @@ import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.CardRepository;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -25,7 +26,15 @@ public class AuthorizeTransaction {
         switch(type.getName()) {
             case CARD: {
                 String[] authorizationDataSplit = authorizationData.split("#");
-                Cards card = cardRepository.findByCardNumber(encoder.encode(authorizationDataSplit[0])).orElse(null);
+                String encoded = encoder.encode(authorizationDataSplit[0]);
+                List<Cards> cardList = cardRepository.findAll();
+                Cards card=null;
+                for(Cards cardInList : cardList) {
+                    if(encoder.matches(authorizationDataSplit[0],cardInList.getCardNumber())) {
+                        card = cardInList;
+                        break;
+                    }
+                }
                 if(card==null) {
                     return false;
                 }
