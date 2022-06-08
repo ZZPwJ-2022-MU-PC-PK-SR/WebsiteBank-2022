@@ -133,7 +133,7 @@ public class PageController {
             if(bankAccount.getUser().getId().equals(userDetails.getId())){
                 Cards card = new Cards(bankAccount.getAccountNumber(),newDate,"Active",encoder.encode(cardNUmber));
                 cardRepository.save(card);
-                return ResponseEntity.ok("Operation finished Correctly");
+                return ResponseEntity.ok("Operation finished Correctly, card number:"+cardNUmber);
             }
         }
         return (ResponseEntity<?>) ResponseEntity.badRequest();
