@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.mockusers.WithMockCustomUserTransaction;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.*;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.BankAccountRequest;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.BankAccountResponse;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.*;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.security.WebSecurityConfig;
 
@@ -39,13 +40,18 @@ public class BankAccountTest {
     private UserRepository userRepository;
     @Autowired
     private AuthorizationCodeRepository authorizationCodeRepository;
+    @Autowired
+    private BankAccountRepository bankAccountRepository;
     private String json;
     private final ObjectMapper mapper = new ObjectMapper();
-    private BankAccountRequest bankAccountRequest = new BankAccountRequest();
-    private List<BankAccount> bankAccountList = new ArrayList<>();
+    private BankAccountRequest bankAccountRequest;
+    private List<BankAccountResponse> bankAccountList;
 
     @BeforeEach
     public void init() throws Exception {
+        bankAccountRepository.deleteAll();
+        bankAccountList = new ArrayList<>();
+        bankAccountRequest = new BankAccountRequest();
         BankAccountType bankAccountType = new BankAccountType(4.0,4.0,4.0,"Normal");
         bankAccountTypeRepository.save(bankAccountType);
         User testUser = new User("usernamefine", "testuser@test.com","testpassword",
@@ -56,8 +62,13 @@ public class BankAccountTest {
         AuthorizationCode code = new AuthorizationCode(testUser,0);
         code.setCode("1234");
         authorizationCodeRepository.save(code);
-        bankAccountList.add(new BankAccount(bankAccountType, testUser, 10.0, "12345678901234567890123416"));
-        bankAccountList.add(new BankAccount(bankAccountType, testUser, 20.0, "12345678901234567890123316"));
+        BankAccount b1 = new BankAccount(bankAccountType, testUser, 10.0, "12345678901234567890123416");
+        BankAccount b2 = new BankAccount(bankAccountType, testUser, 20.0, "12345678901234567890123426");
+        bankAccountRepository.save(b1);
+        bankAccountRepository.save(b2);
+        bankAccountList.add(new BankAccountResponse(b1));
+        bankAccountList.add(new BankAccountResponse(b2));
+
     }
 
     @Test
@@ -102,14 +113,13 @@ public class BankAccountTest {
                                 mapper.readValue(result.getResponse().getContentAsString(), Map.class).get("message")));
     }
 
-//    @Test
-//    @WithMockCustomUserWithId
-//    public void shouldReturnBankAccounts() throws Exception {
-//        mockMvc.perform(get("/api/bank_account/get"))
-//                .andExpect(status().isOk()).andExpect(result ->
-//                        assertEquals(result.getResponse().getContentAsString(),
-//                                mapper.writeValueAsString(bankAccountList)));
-//
-//    }
+    @Test
+    @WithMockCustomUserTransaction
+    public void shouldReturnBankAccounts() throws Exception {
+        mockMvc.perform(get("/api/bank_account/get"))
+                .andExpect(status().isOk()).andExpect(result ->
+                        assertEquals(result.getResponse().getContentAsString(),
+                                mapper.writeValueAsString(bankAccountList)));
+    }
 
 }

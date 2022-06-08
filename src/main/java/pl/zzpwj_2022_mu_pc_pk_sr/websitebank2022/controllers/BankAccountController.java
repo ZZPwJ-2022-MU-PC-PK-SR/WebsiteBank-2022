@@ -16,6 +16,7 @@ import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.Transaction;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.models.User;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.BankAccountRequest;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.request.TransactionRequest;
+import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.BankAccountResponse;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.CodesResponse;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.payload.response.MessageResponse;
 import pl.zzpwj_2022_mu_pc_pk_sr.websitebank2022.repository.*;
@@ -69,25 +70,19 @@ public class BankAccountController {
         return ResponseEntity.ok(new MessageResponse("New Bank Account Added!"));
     }
 
-//    @GetMapping("/get")
-//    @PreAuthorize("hasRole('USER')")
-//    public ResponseEntity<?> getBankAccounts(@AuthenticationPrincipal UserDetailsImpl userDetails,
-//                                                    @RequestParam(required = false) Long typeId) {
-//        try {
-//            List<BankAccount> bankAccountList;
-//            if(typeId == null) {
-//                bankAccountList = bankAccountRepository.findByUserId(userDetails.getId());
-//            } else {
-//                bankAccountList = bankAccountRepository.findByUserAndTypeId(userDetails.getId(), typeId);
-//            }
-//            List<BankAccountResponse> bankAccountList1 = new ArrayList<>();
-//            for (BankAccount b : bankAccountList) {
-//                bankAccountList1.add(new BankAccountResponse(b));
-//            }
-//            return ResponseEntity.ok(bankAccountList1);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+    @GetMapping("/get")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> getBankAccounts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        try {
+            List<BankAccount> bankAccountList = bankAccountRepository.findByUserId(userDetails.getId());
+            List<BankAccountResponse> bankAccountList1 = new ArrayList<>();
+            for (BankAccount b : bankAccountList) {
+                bankAccountList1.add(new BankAccountResponse(b));
+            }
+            return ResponseEntity.ok(bankAccountList1);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
